@@ -9,14 +9,14 @@ import project.sql.SQLHandler;
 
 public class SignINController {
     public Label error;
-    Main main;
+    private Main main;
     public TextField loginField;
     public TextField passwordField;
 
     public void tryToSignIn() {
         String login = loginField.getText();
         String password = passwordField.getText();
-        SQLHandler sql_handler = new SQLHandler();
+        SQLHandler sql_handler = new SQLHandler(main);
         int success = sql_handler.connect(login,password);
         switch (success) {
             case 0:

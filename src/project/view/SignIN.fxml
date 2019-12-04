@@ -26,7 +26,7 @@
          <children>
             <Label text="login:" GridPane.columnIndex="1" />
             <Label text="hasło:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="loginField" GridPane.columnIndex="2" />
+            <TextField fx:id="loginField" text="inf132337" GridPane.columnIndex="2" />
             <TextField fx:id="passwordField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
          </children>
       </GridPane>

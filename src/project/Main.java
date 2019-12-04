@@ -1,6 +1,8 @@
 package project;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Orientation;
 import javafx.scene.Parent;
@@ -9,6 +11,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import project.classes.Pracownik;
 import project.sql.SQLHandler;
 import project.view.RootController;
 import project.view.SignINController;
@@ -21,18 +24,21 @@ public class Main extends Application {
     private BorderPane rootLayout;
     private SQLHandler sqlHandler;
 
+    private volatile ObservableList<Pracownik> workers = FXCollections.observableArrayList();;
+
     @Override
     public void start(Stage primaryStage) throws Exception{
         primaryStage.setTitle("University Tests Manager");
         this.primaryStage = primaryStage;
 
         signToDatabase();
-        //initRootLayout();
     }
 
     public void initRootLayout(SQLHandler sql) {
         try {
             sqlHandler = sql;
+            sqlHandler.fillPracownik();
+
             primaryStage.close();
             primaryStage = new Stage();
             primaryStage.setTitle("University Tests Manager");
@@ -68,6 +74,9 @@ public class Main extends Application {
         }
     }
 
+    public ObservableList<Pracownik> getWorkers() {
+        return workers;
+    }
     public static void main(String[] args) {
         launch(args);
     }
