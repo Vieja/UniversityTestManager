@@ -2,9 +2,12 @@ package project;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Orientation;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import project.view.RootController;
 
@@ -20,6 +23,8 @@ public class Main extends Application {
         primaryStage.setTitle("University Tests Manager");
         this.primaryStage = primaryStage;
 
+
+
         initRootLayout();
     }
 
@@ -34,7 +39,9 @@ public class Main extends Application {
 
             Scene scene = new Scene(rootLayout);
             primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
             primaryStage.show();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
