@@ -17,7 +17,7 @@ public class StudenciController extends TabController {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue )
             {
-                divider.setPosition(0.5);
+                divider.setPosition(0.6);
             }
         });
     }

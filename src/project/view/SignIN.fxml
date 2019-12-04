@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#tryToSignInEnter" prefHeight="200.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.SignINController">
+   <center>
+      <GridPane prefHeight="112.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.79998779296875" minWidth="8.39996337890625" prefWidth="47.59998779296875" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="258.60003662109375" minWidth="10.0" prefWidth="69.4000244140625" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="262.9999633789063" minWidth="10.0" prefWidth="262.1999755859375" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="32.5999755859375" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="login:" GridPane.columnIndex="1" />
+            <Label text="hasło:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <TextField fx:id="loginField" GridPane.columnIndex="2" />
+            <TextField fx:id="passwordField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+         </children>
+      </GridPane>
+   </center>
+   <bottom>
+      <AnchorPane prefHeight="52.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button layoutX="144.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#tryToSignIn" prefHeight="15.0" prefWidth="111.0" text="Zaloguj" />
+         </children>
+      </AnchorPane>
+   </bottom>
+   <top>
+      <AnchorPane prefHeight="37.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label layoutX="92.0" layoutY="13.0" prefHeight="30.0" prefWidth="216.0" text="Logowanie do systemu">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </Label>
+         </children>
+      </AnchorPane>
+   </top>
+</BorderPane>
