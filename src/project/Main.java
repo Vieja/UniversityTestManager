@@ -19,6 +19,7 @@ public class Main extends Application {
 
     private Stage primaryStage;
     private BorderPane rootLayout;
+    private SQLHandler sqlHandler;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -26,13 +27,29 @@ public class Main extends Application {
         this.primaryStage = primaryStage;
 
         signToDatabase();
-        //connectWithDatabase();
         //initRootLayout();
     }
 
-    private void connectWithDatabase(){
-        SQLHandler sql_handler = new SQLHandler();
-        //sql_handler.connect();
+    public void initRootLayout(SQLHandler sql) {
+        try {
+            sqlHandler = sql;
+            primaryStage.close();
+            primaryStage = new Stage();
+            primaryStage.setTitle("University Tests Manager");
+            FXMLLoader loader = new FXMLLoader();
+            loader.setLocation(Main.class.getResource("view/RootLayout.fxml"));
+            rootLayout = loader.load();
+
+            RootController controller = loader.getController();
+            controller.setMain(this);
+
+            Scene scene = new Scene(rootLayout);
+            primaryStage.setScene(scene);
+            primaryStage.setResizable(false);
+            primaryStage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void signToDatabase() {
@@ -50,28 +67,6 @@ public class Main extends Application {
             e.printStackTrace();
         }
     }
-
-    public void initRootLayout() {
-        try {
-            primaryStage.close();
-            primaryStage = new Stage();
-            FXMLLoader loader = new FXMLLoader();
-            loader.setLocation(Main.class.getResource("view/RootLayout.fxml"));
-            rootLayout = loader.load();
-
-            RootController controller = loader.getController();
-            controller.setMain(this);
-
-            Scene scene = new Scene(rootLayout);
-            primaryStage.setScene(scene);
-            primaryStage.setResizable(false);
-            primaryStage.show();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
 
     public static void main(String[] args) {
         launch(args);
