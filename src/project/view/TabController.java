@@ -1,5 +1,7 @@
 package project.view;
 
-public abstract class TabController {
+import project.Main;
 
+public abstract class TabController {
+    public abstract void setApp(Main main);
 }

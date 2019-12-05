@@ -18,6 +18,22 @@ public class Pracownik {
         this.placa = placa;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getEtat() {
+        return etat;
+    }
+
+    public String getNazwisko() {
+        return nazwisko;
+    }
+
+    public int getPlaca() {
+        return placa;
+    }
+
     public StringProperty getIDProperty() {
         return new SimpleStringProperty(String.valueOf(id));
     }

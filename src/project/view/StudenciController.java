@@ -6,25 +6,25 @@ import javafx.fxml.FXML;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import project.Main;
 import project.classes.Pracownik;
 
 public class StudenciController extends TabController {
 
+    public TextField indeksField;
+    public TextField imieField;
+    public TextField nazwiskoField;
+    public TextField ocena1Field;
+    public TextField ocena2Field;
     private Main main;
 
     public SplitPane split1;
-    @FXML
     public TableView<Pracownik> TableStudent;
-    @FXML
     public TableColumn<Pracownik, String> ColumnStudentIndeks;
-    @FXML
     public TableColumn<Pracownik, String> ColumnStudentImie;
-    @FXML
     public TableColumn<Pracownik, String> ColumnStudentNazwisko;
-    @FXML
     public TableColumn<Pracownik, String> ColumnStudentOcena1;
-    @FXML
     public TableColumn<Pracownik, String> ColumnStudentOcena2;
 
     @FXML
@@ -39,6 +39,14 @@ public class StudenciController extends TabController {
             }
         });
 
+        TableStudent.getSelectionModel().selectedItemProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    if(newValue != null) {
+                        showStudent(newValue);
+                    }
+                })
+        );
+
         ColumnStudentIndeks.setCellValueFactory(cellData -> cellData.getValue().getIDProperty());
         ColumnStudentImie.setCellValueFactory(cellData -> cellData.getValue().getEtatProperty());
         ColumnStudentNazwisko.setCellValueFactory(cellData -> cellData.getValue().getNazwiskoProperty());
@@ -46,7 +54,8 @@ public class StudenciController extends TabController {
 
     }
 
-    private void showStudent(Pracownik newValue) {
+    private void showStudent(Pracownik pracownik) {
+        indeksField.setText(String.valueOf(pracownik.getId()));
     }
 
     public void setApp(Main main){

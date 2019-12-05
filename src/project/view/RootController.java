@@ -33,23 +33,14 @@ public class RootController {
             System.out.println("Nie udało się załadować zawartości zakładek");
         }
         TabController cont=loader.getController();
+        cont.setApp(main);
         //cont.setEkonomia(main.getEkonomia());
         //cont.setTable();
     }
 
     public void setMain(Main main) {
         this.main=main;
-        //initTab(id_tab1, "Studenci.fxml");
+        initTab(id_tab1, "Studenci.fxml");
 
-        FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(RootController.class.getResource("Studenci.fxml"));
-        try {
-            id_tab1.getChildren().setAll((Node) loader.load());
-        }
-        catch(IOException e){
-            System.out.println("Nie udało się załadować zawartości zakładek");
-        }
-        StudenciController cont = loader.getController();
-        cont.setApp(main);
     }
 }
