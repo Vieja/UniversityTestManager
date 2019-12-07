@@ -1,11 +1,3 @@
-rem
-rem  $Header: PLdemobld.sql.0,v 00001 91/09/21 11:15:45
-rem
-set termout on
-rem host write sys$output "Konstrukcja relacji demonstracyjnych.  Prosze czekac"
-host echo "Konstrukcja relacji demonstracyjnych.  Prosze czekac"
-set feedback on
-
 DROP TABLE PRACOWNICY cascade constraints;
 DROP TABLE ZESPOLY cascade constraints;
 DROP TABLE ETATY cascade constraints;
