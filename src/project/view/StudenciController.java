@@ -8,7 +8,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import project.Main;
-import project.classes.Pracownik;
+import project.classes.Student;
 
 public class StudenciController extends TabController {
 
@@ -20,12 +20,12 @@ public class StudenciController extends TabController {
     private Main main;
 
     public SplitPane split1;
-    public TableView<Pracownik> TableStudent;
-    public TableColumn<Pracownik, String> ColumnStudentIndeks;
-    public TableColumn<Pracownik, String> ColumnStudentImie;
-    public TableColumn<Pracownik, String> ColumnStudentNazwisko;
-    public TableColumn<Pracownik, String> ColumnStudentOcena1;
-    public TableColumn<Pracownik, String> ColumnStudentOcena2;
+    public TableView<Student> TableStudent;
+    public TableColumn<Student, String> ColumnStudentIndeks;
+    public TableColumn<Student, String> ColumnStudentImie;
+    public TableColumn<Student, String> ColumnStudentNazwisko;
+    public TableColumn<Student, String> ColumnStudentOcena1;
+    public TableColumn<Student, String> ColumnStudentOcena2;
 
     @FXML
     private void initialize() {
@@ -47,19 +47,19 @@ public class StudenciController extends TabController {
                 })
         );
 
-        ColumnStudentIndeks.setCellValueFactory(cellData -> cellData.getValue().getIDProperty());
-        ColumnStudentImie.setCellValueFactory(cellData -> cellData.getValue().getEtatProperty());
+        ColumnStudentIndeks.setCellValueFactory(cellData -> cellData.getValue().getIndeksProperty());
+        ColumnStudentImie.setCellValueFactory(cellData -> cellData.getValue().getImieProperty());
         ColumnStudentNazwisko.setCellValueFactory(cellData -> cellData.getValue().getNazwiskoProperty());
-        ColumnStudentOcena1.setCellValueFactory(cellData -> cellData.getValue().getPlacaProperty());
-
+        ColumnStudentOcena1.setCellValueFactory(cellData -> cellData.getValue().getOcena1Property());
+        ColumnStudentOcena2.setCellValueFactory(cellData -> cellData.getValue().getOcena2Property());
     }
 
-    private void showStudent(Pracownik pracownik) {
-        indeksField.setText(String.valueOf(pracownik.getId()));
+    private void showStudent(Student pracownik) {
+        indeksField.setText(String.valueOf(pracownik.getIndeks()));
     }
 
     public void setApp(Main main){
         this.main = main;
-        TableStudent.setItems(main.getWorkers());
+        TableStudent.setItems(main.getObserListStudents());
     }
 }

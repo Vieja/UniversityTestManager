@@ -4,14 +4,10 @@ import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.Orientation;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import project.classes.Pracownik;
+import project.classes.Student;
 import project.sql.SQLHandler;
 import project.view.RootController;
 import project.view.SignINController;
@@ -24,7 +20,7 @@ public class Main extends Application {
     private BorderPane rootLayout;
     private SQLHandler sqlHandler;
 
-    private volatile ObservableList<Pracownik> workers = FXCollections.observableArrayList();;
+    private volatile ObservableList<Student> students = FXCollections.observableArrayList();;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -37,7 +33,7 @@ public class Main extends Application {
     public void initRootLayout(SQLHandler sql) {
         try {
             sqlHandler = sql;
-            sqlHandler.fillPracownik();
+            sqlHandler.selectStudenci();
 
             primaryStage.close();
             primaryStage = new Stage();
@@ -74,8 +70,8 @@ public class Main extends Application {
         }
     }
 
-    public ObservableList<Pracownik> getWorkers() {
-        return workers;
+    public ObservableList<Student> getObserListStudents() {
+        return students;
     }
     public static void main(String[] args) {
         launch(args);

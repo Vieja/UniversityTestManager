@@ -1,7 +1,7 @@
 package project.sql;
 
 import project.Main;
-import project.classes.Pracownik;
+import project.classes.Student;
 
 import java.sql.*;
 import java.util.Properties;
@@ -51,15 +51,16 @@ public class SQLHandler {
 
     }
 
-    public Exception fillPracownik() {
-        ResultSet rsWorker = selectALL("pracownicy");
+    public Exception selectStudenci() {
+        ResultSet rsStudent = selectALL("studenci");
 
         try{
-            while (rsWorker.next()) {
-                Pracownik worker = new Pracownik(
-                        rsWorker.getInt(1), rsWorker.getString(2),
-                        rsWorker.getString(3), rsWorker.getInt(4));
-                main.getWorkers().add(worker);
+            while (rsStudent.next()) {
+                Student student = new Student(
+                        rsStudent.getInt(1), rsStudent.getString(2),
+                        rsStudent.getString(3), rsStudent.getString(4),
+                        rsStudent.getString(5));
+                main.getObserListStudents().add(student);
             }
         } catch (Exception exception) {
             return exception;
