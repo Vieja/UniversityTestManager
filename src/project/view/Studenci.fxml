@@ -25,7 +25,7 @@
                      <children>
                         <TableView fx:id="TableStudent" layoutX="36.0" layoutY="45.0" prefHeight="791.0" prefWidth="418.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
                           <columns>
-                            <TableColumn fx:id="ColumnStudentIndeks" prefWidth="75.0" text="Indeks" />
+                            <TableColumn fx:id="ColumnStudentIndeks" prefWidth="100.0" text="Indeks" />
                             <TableColumn fx:id="ColumnStudentImie" prefWidth="75.0" text="Imię" />
                               <TableColumn fx:id="ColumnStudentNazwisko" prefWidth="75.0" text="Nazwisko" />
                               <TableColumn fx:id="ColumnStudentOcena1" prefWidth="75.0" text="Ocena I" />
@@ -50,9 +50,9 @@
                                  <bottom>
                                     <AnchorPane prefHeight="247.0" prefWidth="457.0" BorderPane.alignment="CENTER">
                                        <children>
-                                          <Button layoutX="33.0" layoutY="29.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="119.0" text="Dodaj" />
-                                          <Button layoutX="173.0" layoutY="29.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="110.0" text="Nadpisz" />
-                                          <Button layoutX="308.0" layoutY="30.0" mnemonicParsing="false" prefHeight="36.0" prefWidth="105.0" text="Usuń" />
+                                          <Button layoutX="33.0" layoutY="29.0" mnemonicParsing="false" onMouseClicked="#dodajStud" prefHeight="38.0" prefWidth="119.0" text="Dodaj" />
+                                          <Button layoutX="173.0" layoutY="29.0" mnemonicParsing="false" onMouseClicked="#edytujStud" prefHeight="36.0" prefWidth="110.0" text="Nadpisz" />
+                                          <Button layoutX="308.0" layoutY="30.0" mnemonicParsing="false" onMouseClicked="#usunStud" prefHeight="36.0" prefWidth="105.0" text="Usuń" />
                                        </children>
                                     </AnchorPane>
                                  </bottom>

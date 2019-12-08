@@ -76,4 +76,22 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    public void usunStudentaZBazy(Student wybrany) {
+        getObserListStudents().remove(wybrany);
+        sqlHandler.deleteFrom("DELETE FROM STUDENCI WHERE INDEKS = " + wybrany.getIndeks());
+    }
+
+    public void edytujStudentaWBazie(Student wybrany, String id, String imie, String nazw, String oc1, String oc2) {
+        getObserListStudents().remove(wybrany);
+        if (oc1.equals("")) oc1 = "null";
+        if (oc2.equals("")) oc2 = "null";
+        sqlHandler.updateWhere("UPDATE STUDENCI SET INDEKS = " + id + ", IMIE = '" + imie +"', NAZWISKO = '" + nazw + "', OCENA_1 = " + oc1 +", OCENA_2 = " + oc2 + " WHERE INDEKS = " + id);
+        wybrany.setIndeks(Integer.parseInt(id));
+        wybrany.setImie(imie);
+        wybrany.setNazwisko(nazw);
+        wybrany.setOcena_1(oc1);
+        wybrany.setOcena_2(oc2);
+        getObserListStudents().add(wybrany);
+    }
 }

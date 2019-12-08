@@ -68,5 +68,36 @@ public class SQLHandler {
         return null;
     }
 
+    public void deleteFrom (String request){
+        Statement stmt;
+        int rows;
+        try {
+            stmt = conn.createStatement();
+            System.out.println(request);
+            rows = stmt.executeUpdate(request);
+            System.out.println(rows + " for 'DELETE'");
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute DELETE FROM query.");
+            System.out.println("Error Code: " + exception.getErrorCode());
+            System.out.println("SQLState: " + exception.getSQLState());
+        }
+    }
+
+    public void updateWhere (String request){
+
+        Statement stmt;
+        int rows;
+        try {
+            stmt = conn.createStatement();
+            System.out.println(request);
+            rows = stmt.executeUpdate(request);
+            System.out.println(rows + " for 'UPDATE'");
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute UPDATE WHERE query.");
+            System.out.println("Error Code: " + exception.getErrorCode());
+            System.out.println("SQLState: " + exception.getSQLState());
+        }
+
+    }
 }
 

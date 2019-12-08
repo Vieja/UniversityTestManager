@@ -7,6 +7,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import project.Main;
 import project.classes.Student;
 
@@ -26,6 +27,8 @@ public class StudenciController extends TabController {
     public TableColumn<Student, String> ColumnStudentNazwisko;
     public TableColumn<Student, String> ColumnStudentOcena1;
     public TableColumn<Student, String> ColumnStudentOcena2;
+
+    public Student wybrany = null;
 
     @FXML
     private void initialize() {
@@ -54,12 +57,32 @@ public class StudenciController extends TabController {
         ColumnStudentOcena2.setCellValueFactory(cellData -> cellData.getValue().getOcena2Property());
     }
 
-    private void showStudent(Student pracownik) {
-        indeksField.setText(String.valueOf(pracownik.getIndeks()));
+    private void showStudent(Student student) {
+        indeksField.setText(String.valueOf(student.getIndeks()));
+        imieField.setText(student.getImie());
+        nazwiskoField.setText(student.getNazwisko());
+        if (student.getOcena_1() == null)
+            ocena1Field.setText("");
+        else ocena1Field.setText(student.getOcena_1());
+        if (student.getOcena_2() == null)
+            ocena2Field.setText("");
+        else ocena2Field.setText(student.getOcena_2());
+        wybrany = student;
     }
 
     public void setApp(Main main){
         this.main = main;
         TableStudent.setItems(main.getObserListStudents());
+    }
+
+    public void dodajStud() {
+    }
+
+    public void edytujStud() {
+        main.edytujStudentaWBazie(wybrany, indeksField.getText(),imieField.getText(), nazwiskoField.getText(), ocena1Field.getText(), ocena2Field.getText());
+    }
+
+    public void usunStud() {
+        main.usunStudentaZBazy(wybrany);
     }
 }
