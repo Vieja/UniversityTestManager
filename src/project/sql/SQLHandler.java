@@ -1,6 +1,7 @@
 package project.sql;
 
 import project.Main;
+import project.classes.Pytanie;
 import project.classes.Student;
 
 import java.sql.*;
@@ -52,6 +53,22 @@ public class SQLHandler {
         return rs;
     }
 
+    public Exception selectPytania() {
+        ResultSet rsPytanie = selectALL("zadania");
+        main.getObserListPytania().removeAll();
+        try{
+            while (rsPytanie.next()) {
+                Pytanie pytanie = new Pytanie(
+                        rsPytanie.getInt(1), rsPytanie.getString(2),
+                        rsPytanie.getFloat(3));
+                main.getObserListPytania().add(pytanie);
+            }
+        } catch (Exception exception) {
+            return exception;
+        }
+        return null;
+    }
+
     public Exception selectStudenci() {
         ResultSet rsStudent = selectALL("studenci");
         main.getObserListStudents().removeAll();
@@ -84,7 +101,7 @@ public class SQLHandler {
         }
     }
 
-    public void updateWhere (String request){
+    public Exception updateWhere (String request){
         Statement stmt;
         int rows;
         try {
@@ -96,7 +113,9 @@ public class SQLHandler {
             System.out.println("Couldn't execute UPDATE WHERE query.");
             System.out.println("Error Code: " + exception.getErrorCode());
             System.out.println("SQLState: " + exception.getSQLState());
+            return exception;
         }
+        return null;
     }
 
     public List<Integer> searchWhere (String sqlSelectCode){

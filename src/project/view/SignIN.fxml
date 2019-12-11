@@ -13,37 +13,39 @@
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" onKeyPressed="#tryToSignInEnter" prefHeight="223.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.SignINController">
    <center>
-      <GridPane prefHeight="78.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+      <GridPane prefHeight="98.0" prefWidth="400.0" BorderPane.alignment="CENTER">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="122.79998779296875" minWidth="8.39996337890625" prefWidth="47.59998779296875" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="258.60003662109375" minWidth="10.0" prefWidth="69.4000244140625" />
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="262.9999633789063" minWidth="10.0" prefWidth="262.1999755859375" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="32.5999755859375" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="258.60003662109375" minWidth="10.0" prefWidth="60.599999999999994" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="262.9999633789063" minWidth="10.0" prefWidth="233.4" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="200.0" minWidth="10.0" prefWidth="60.40001220703124" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="23.60001220703125" minHeight="2.5999938964843743" prefHeight="2.5999938964843743" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="53.80000610351563" minHeight="10.0" prefHeight="47.200018310546874" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="52.799981689453126" minHeight="10.0" prefHeight="52.799981689453126" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="22.600012207031256" minHeight="5.599981689453131" prefHeight="5.599981689453131" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label text="login:" GridPane.columnIndex="1" />
-            <Label text="hasło:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-            <TextField fx:id="loginField" text="inf132337" GridPane.columnIndex="2" />
-            <PasswordField fx:id="passwordField" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <Label text="login:" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="hasło:" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <TextField fx:id="loginField" text="inf132337" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+            <PasswordField fx:id="passwordField" GridPane.columnIndex="2" GridPane.rowIndex="2" />
          </children>
       </GridPane>
    </center>
    <bottom>
-      <AnchorPane prefHeight="70.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="62.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <children>
-            <Button layoutX="144.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#tryToSignIn" prefHeight="15.0" prefWidth="111.0" text="Zaloguj" />
+            <Button layoutX="144.0" layoutY="1.0" mnemonicParsing="false" onMouseClicked="#tryToSignIn" prefHeight="22.0" prefWidth="111.0" text="Zaloguj" />
             <Label fx:id="error" layoutX="29.0" layoutY="38.0" textFill="RED" />
          </children>
       </AnchorPane>
    </bottom>
    <top>
-      <AnchorPane prefHeight="37.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="62.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <children>
-            <Label layoutX="92.0" layoutY="13.0" prefHeight="30.0" prefWidth="216.0" text="Logowanie do systemu">
+            <Label layoutX="110.0" layoutY="14.0" prefHeight="38.0" prefWidth="216.0" text="Logowanie do systemu">
                <font>
                   <Font size="20.0" />
                </font>

@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="720.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.view.PytaniaController">
+   <children>
+      <SplitPane fx:id="split1" dividerPositions="0.6" prefHeight="790.4" prefWidth="1498.4" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <items>
+            <SplitPane fx:id="split2" dividerPositions="0.9385" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+               <items>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+                     <children>
+                        <TableView fx:id="TablePytanie" layoutX="36.0" layoutY="28.0" AnchorPane.bottomAnchor="-5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="28.0">
+                          <columns>
+                            <TableColumn fx:id="ColumnPytanieTresc" prefWidth="588.7999755740166" resizable="false" text="Treść" />
+                              <TableColumn fx:id="ColumnPytaniePunkty" prefWidth="109.60003662109375" resizable="false" text="Liczba punktów" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                        <Label layoutX="327.0" layoutY="2.0" text="Baza pytań">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="702.0" prefWidth="1200.0">
+                     <children>
+                        <ChoiceBox fx:id="pytanieChoiceBox" layoutX="44.0" layoutY="9.0" prefHeight="25.0" prefWidth="190.0" />
+                        <TextField fx:id="searchBarPytanie" layoutX="263.0" layoutY="9.0" prefHeight="25.0" prefWidth="190.0" />
+                        <Button layoutX="476.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#searchPytanie" prefWidth="95.0" text="SZUKAJ" />
+                        <Button layoutX="595.0" layoutY="9.0" mnemonicParsing="false" onMouseClicked="#reloadPytania" prefHeight="25.0" prefWidth="95.0" text="ODŚWIEŻ" />
+                     </children>
+                  </AnchorPane>
+               </items>
+            </SplitPane>
+            <Accordion>
+              <panes>
+                <TitledPane animated="false" text="Dodaj/edytuj/usuń pytania">
+                     <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <bottom>
+                              <AnchorPane prefHeight="247.0" prefWidth="457.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Button layoutX="34.0" layoutY="28.0" mnemonicParsing="false" onMouseClicked="#dodajPyt" prefHeight="40.0" prefWidth="110.0" text="Dodaj" />
+                                    <Button layoutX="173.0" layoutY="28.0" mnemonicParsing="false" onMouseClicked="#edytujPyt" prefHeight="40.0" prefWidth="110.0" text="Nadpisz" />
+                                    <Button layoutX="306.0" layoutY="28.0" mnemonicParsing="false" onMouseClicked="#usunPyt" prefHeight="40.0" prefWidth="110.0" text="Usuń" />
+                                 </children>
+                              </AnchorPane>
+                           </bottom>
+                           <center>
+                              <GridPane alignment="CENTER" prefHeight="378.0" prefWidth="361.0" BorderPane.alignment="CENTER">
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="240.0" minWidth="10.0" prefWidth="162.3999755859375" />
+                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="310.3999755859375" minWidth="10.0" prefWidth="284.8000244140625" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.20001220703122" minWidth="10.0" prefWidth="10.4000244140625" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                  <RowConstraints maxHeight="128.60001220703126" minHeight="0.0" prefHeight="41.40000190734863" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="319.19999999999993" minHeight="10.0" prefHeight="255.79999809265138" valignment="TOP" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="102.4000183105469" minHeight="10.0" prefHeight="102.4000183105469" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label alignment="CENTER" text="Treść" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" text="Liczba punktów" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="punktyField" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextArea fx:id="trescField" prefHeight="134.0" prefWidth="290.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                           </center>
+                        </BorderPane>
+                     </content>
+                </TitledPane>
+                <TitledPane animated="false" text="Dodaj pytanie do zestawu">
+                     <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <bottom>
+                              <AnchorPane prefHeight="163.0" prefWidth="457.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Button layoutX="148.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#dodajPyt" prefHeight="42.0" prefWidth="160.0" text="Dodaj" />
+                                 </children>
+                              </AnchorPane>
+                           </bottom>
+                           <top>
+                              <GridPane alignment="CENTER" prefHeight="323.0" prefWidth="457.0" BorderPane.alignment="CENTER">
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="240.0" minWidth="10.0" prefWidth="165.60001220703126" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="298.3999755859375" minWidth="10.0" prefWidth="281.59998779296876" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.20001220703122" minWidth="10.0" prefWidth="10.4000244140625" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="55.799993896484374" minHeight="10.0" prefHeight="21.399998092651366" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="206.39998779296874" minHeight="10.0" prefHeight="206.39998779296874" valignment="TOP" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="112.79999389648435" minHeight="10.0" prefHeight="88.00001220703123" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label alignment="CENTER" text="Treść" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" text="Liczba punktów" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="punktyField1" editable="false" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextArea fx:id="trescField1" editable="false" prefHeight="206.0" prefWidth="298.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                 </children>
+                              </GridPane>
+                           </top>
+                           <center>
+                              <GridPane prefHeight="146.0" prefWidth="457.0" BorderPane.alignment="CENTER">
+                                <columnConstraints>
+                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="222.4000244140625" minWidth="10.0" prefWidth="182.4000244140625" />
+                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="273.5999755859375" minWidth="10.0" prefWidth="273.5999755859375" />
+                                </columnConstraints>
+                                <rowConstraints>
+                                    <RowConstraints maxHeight="52.000006103515624" minHeight="8.000005149841307" prefHeight="20.600018310546872" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="108.7999948501587" minHeight="10.0" prefHeight="62.19996337890625" vgrow="SOMETIMES" />
+                                  <RowConstraints maxHeight="88.80000000000001" minHeight="10.0" prefHeight="63.000036621093756" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="81.5999755859375" minHeight="10.0" prefHeight="19.199987792968756" vgrow="SOMETIMES" />
+                                </rowConstraints>
+                                 <children>
+                                    <Label text="Data egzaminu" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Zestaw" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <ChoiceBox fx:id="dateChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <ChoiceBox fx:id="zestawChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </center>
+                        </BorderPane>
+                     </content>
+                </TitledPane>
+              </panes>
+            </Accordion>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

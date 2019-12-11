@@ -24,6 +24,7 @@ public class StudenciController extends TabController {
     private Main main;
 
     public SplitPane split1;
+    public SplitPane split2;
     public TableView<Student> TableStudent;
     public TableColumn<Student, String> ColumnStudentIndeks;
     public TableColumn<Student, String> ColumnStudentImie;
@@ -42,6 +43,16 @@ public class StudenciController extends TabController {
             public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue )
             {
                 divider.setPosition(0.6);
+            }
+        });
+
+        SplitPane.Divider divider2 = split2.getDividers().get(0);
+        divider2.positionProperty().addListener(new ChangeListener<Number>()
+        {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue )
+            {
+                divider2.setPosition(0.9385);
             }
         });
 
