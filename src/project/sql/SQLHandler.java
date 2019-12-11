@@ -4,6 +4,8 @@ import project.Main;
 import project.classes.Student;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class SQLHandler {
@@ -48,12 +50,11 @@ public class SQLHandler {
             System.out.println("Couldn't execute SELECT query.");
         }
         return rs;
-
     }
 
     public Exception selectStudenci() {
         ResultSet rsStudent = selectALL("studenci");
-
+        main.getObserListStudents().removeAll();
         try{
             while (rsStudent.next()) {
                 Student student = new Student(
@@ -84,7 +85,6 @@ public class SQLHandler {
     }
 
     public void updateWhere (String request){
-
         Statement stmt;
         int rows;
         try {
@@ -97,7 +97,27 @@ public class SQLHandler {
             System.out.println("Error Code: " + exception.getErrorCode());
             System.out.println("SQLState: " + exception.getSQLState());
         }
+    }
 
+    public List<Integer> searchWhere (String sqlSelectCode){
+        try {
+            Statement stmt = conn.createStatement();
+            System.out.println(sqlSelectCode);
+            ResultSet resultSet = stmt.executeQuery(sqlSelectCode);
+            List<Integer> results = new ArrayList<>();
+            while (resultSet.next()) {
+                results.add(resultSet.getInt(1));
+//                System.out.println(results.get(results.size() - 1));
+            }
+            return results;
+        } catch (SQLException exception) {
+            String title = "SQLException";
+            String content = "Couldn't execute SELECT WHERE query.\n" +
+                    "Error Code: " + exception.getErrorCode() + "\n" +
+                    "SQLState: " + exception.getSQLState();
+            System.out.println(content);
+            return null;
+        }
     }
 }
 

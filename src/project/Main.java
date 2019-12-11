@@ -13,6 +13,7 @@ import project.view.RootController;
 import project.view.SignINController;
 
 import java.io.IOException;
+import java.util.List;
 
 public class Main extends Application {
 
@@ -34,7 +35,6 @@ public class Main extends Application {
         try {
             sqlHandler = sql;
             sqlHandler.selectStudenci();
-
             primaryStage.close();
             primaryStage = new Stage();
             primaryStage.setTitle("University Tests Manager");
@@ -83,15 +83,20 @@ public class Main extends Application {
     }
 
     public void edytujStudentaWBazie(Student wybrany, String id, String imie, String nazw, String oc1, String oc2) {
+        int position = getObserListStudents().indexOf(wybrany);
         getObserListStudents().remove(wybrany);
-        if (oc1.equals("")) oc1 = "null";
-        if (oc2.equals("")) oc2 = "null";
+        if (oc1.equals("")) oc1 = null;
+        if (oc2.equals("")) oc2 = null;
         sqlHandler.updateWhere("UPDATE STUDENCI SET INDEKS = " + id + ", IMIE = '" + imie +"', NAZWISKO = '" + nazw + "', OCENA_1 = " + oc1 +", OCENA_2 = " + oc2 + " WHERE INDEKS = " + id);
         wybrany.setIndeks(Integer.parseInt(id));
         wybrany.setImie(imie);
         wybrany.setNazwisko(nazw);
         wybrany.setOcena_1(oc1);
         wybrany.setOcena_2(oc2);
-        getObserListStudents().add(wybrany);
+        getObserListStudents().add(position, wybrany);
+    }
+
+    public List<Integer> sqlSelect(String sqlSelectCode) {
+        return sqlHandler.searchWhere(sqlSelectCode);
     }
 }

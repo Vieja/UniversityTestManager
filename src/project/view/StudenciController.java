@@ -2,14 +2,15 @@ package project.view;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.SplitPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import project.Main;
 import project.classes.Student;
+
+import java.util.List;
 
 public class StudenciController extends TabController {
 
@@ -18,6 +19,8 @@ public class StudenciController extends TabController {
     public TextField nazwiskoField;
     public TextField ocena1Field;
     public TextField ocena2Field;
+    public ChoiceBox<String> studentChoiceBox;
+    public TextField searchBarStudent;
     private Main main;
 
     public SplitPane split1;
@@ -49,7 +52,6 @@ public class StudenciController extends TabController {
                     }
                 })
         );
-
         ColumnStudentIndeks.setCellValueFactory(cellData -> cellData.getValue().getIndeksProperty());
         ColumnStudentImie.setCellValueFactory(cellData -> cellData.getValue().getImieProperty());
         ColumnStudentNazwisko.setCellValueFactory(cellData -> cellData.getValue().getNazwiskoProperty());
@@ -73,6 +75,12 @@ public class StudenciController extends TabController {
     public void setApp(Main main){
         this.main = main;
         TableStudent.setItems(main.getObserListStudents());
+
+        ObservableList<String> studentAttributes = FXCollections.observableArrayList();
+        studentAttributes.addAll("Nazwisko", "Indeks", "Imię", "Ocena I", "Ocena II");
+        studentChoiceBox.setItems(studentAttributes);
+
+        studentChoiceBox.getSelectionModel().selectFirst();
     }
 
     public void dodajStud() {
@@ -80,9 +88,59 @@ public class StudenciController extends TabController {
 
     public void edytujStud() {
         main.edytujStudentaWBazie(wybrany, indeksField.getText(),imieField.getText(), nazwiskoField.getText(), ocena1Field.getText(), ocena2Field.getText());
+        TableStudent.refresh();
+        TableStudent.getColumns().get(0).setVisible(false);
+        TableStudent.getColumns().get(0).setVisible(true);
     }
 
     public void usunStud() {
         main.usunStudentaZBazy(wybrany);
+    }
+
+    public void searchStudent() {
+        String attribute = studentChoiceBox.getValue();
+        String searchText = searchBarStudent.getText();
+
+        String attr = null;
+        switch (attribute) {
+            case "Indeks":
+                attr = "INDEKS";
+            break;
+
+            case "Imię":
+                attr = "IMIE";
+                break;
+
+            case "Nazwisko":
+                attr = "NAZWISKO";
+                break;
+
+            case "Ocena I":
+                attr = "OCENA_1";
+                break;
+
+            case "Ocena II":
+                attr = "OCENA_2";
+                break;
+        }
+
+        if(!searchText.isEmpty()) {
+            List<Integer> results = main.sqlSelect("SELECT INDEKS FROM STUDENCI " +
+                    "WHERE lower(" + attr + ") like lower('" + searchText + "%')");
+            ObservableList<Student> toShow = FXCollections.observableArrayList();
+            for(Student worker : main.getObserListStudents()) {
+                for(Integer index : results) {
+                    if(index == worker.getIndeks()) {
+                        toShow.add(worker);
+                    }
+                }
+            }
+            TableStudent.getSelectionModel().clearSelection();
+            TableStudent.setItems(toShow);
+        }
+    }
+
+    public void reloadStudenci() {
+        TableStudent.setItems(main.getObserListStudents());
     }
 }
