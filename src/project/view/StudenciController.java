@@ -19,7 +19,14 @@ public class StudenciController extends TabController {
     public TextField nazwiskoField;
     public TextField ocena1Field;
     public TextField ocena2Field;
+    public TextField indeksField1;
+    public TextField imieField1;
+    public TextField nazwiskoField1;
+    public TextField ocena1Field1;
+    public TextField ocena2Field1;
     public ChoiceBox<String> studentChoiceBox;
+    public ChoiceBox<String> dateChoiceBox;
+    public ChoiceBox<String> zestawChoiceBox;
     public TextField searchBarStudent;
     private Main main;
 
@@ -56,6 +63,16 @@ public class StudenciController extends TabController {
             }
         });
 
+        dateChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
+                String data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
+                ObservableList<String> zestawy = FXCollections.observableArrayList();
+                zestawy.addAll(main.selectZestawyZDaty(data));
+                zestawChoiceBox.setItems(zestawy);
+            }
+        });
+
         TableStudent.getSelectionModel().selectedItemProperty().addListener(
                 ((observable, oldValue, newValue) -> {
                     if(newValue != null) {
@@ -74,12 +91,23 @@ public class StudenciController extends TabController {
         indeksField.setText(String.valueOf(student.getIndeks()));
         imieField.setText(student.getImie());
         nazwiskoField.setText(student.getNazwisko());
-        if (student.getOcena_1() == null)
+        indeksField1.setText(String.valueOf(student.getIndeks()));
+        imieField1.setText(student.getImie());
+        nazwiskoField1.setText(student.getNazwisko());
+        if (student.getOcena_1() == null) {
             ocena1Field.setText("");
-        else ocena1Field.setText(student.getOcena_1());
-        if (student.getOcena_2() == null)
+            ocena1Field1.setText("");
+        } else {
+            ocena1Field.setText(student.getOcena_1());
+            ocena1Field1.setText(student.getOcena_1());
+        }
+        if (student.getOcena_2() == null) {
             ocena2Field.setText("");
-        else ocena2Field.setText(student.getOcena_2());
+            ocena2Field1.setText("");
+        } else {
+            ocena2Field.setText(student.getOcena_2());
+            ocena2Field1.setText(student.getOcena_2());
+        }
         wybrany = student;
     }
 
@@ -90,15 +118,18 @@ public class StudenciController extends TabController {
         ObservableList<String> studentAttributes = FXCollections.observableArrayList();
         studentAttributes.addAll("Nazwisko", "Indeks", "Imię", "Ocena I", "Ocena II");
         studentChoiceBox.setItems(studentAttributes);
-
         studentChoiceBox.getSelectionModel().selectFirst();
+
+        ObservableList<String> datyEgz = FXCollections.observableArrayList();
+        datyEgz.addAll(main.selectDatyEgzaminow());
+        dateChoiceBox.setItems(datyEgz);
     }
 
     public void dodajStud() {
     }
 
     public void edytujStud() {
-        main.edytujStudentaWBazie(wybrany, indeksField.getText(),imieField.getText(), nazwiskoField.getText(), ocena1Field.getText(), ocena2Field.getText());
+        main.edytujStudentaWBazie(wybrany, imieField.getText(), nazwiskoField.getText(), ocena1Field.getText(), ocena2Field.getText());
         TableStudent.refresh();
         TableStudent.getColumns().get(0).setVisible(false);
         TableStudent.getColumns().get(0).setVisible(true);
@@ -153,5 +184,8 @@ public class StudenciController extends TabController {
 
     public void reloadStudenci() {
         TableStudent.setItems(main.getObserListStudents());
+    }
+
+    public void dodajStudDoZes(MouseEvent mouseEvent) {
     }
 }

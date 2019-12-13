@@ -54,6 +54,16 @@ public class PytaniaController extends TabController {
             }
         });
 
+        dateChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
+                String data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
+                ObservableList<String> zestawy = FXCollections.observableArrayList();
+                zestawy.addAll(main.selectZestawyZDaty(data));
+                zestawChoiceBox.setItems(zestawy);
+            }
+        });
+
         TablePytanie.getSelectionModel().selectedItemProperty().addListener(
                 ((observable, oldValue, newValue) -> {
                     if(newValue != null) {
@@ -81,6 +91,10 @@ public class PytaniaController extends TabController {
         pytaniaAttributes.addAll("Treść", "Punkty");
         pytanieChoiceBox.setItems(pytaniaAttributes);
         pytanieChoiceBox.getSelectionModel().selectFirst();
+
+        ObservableList<String> datyEgz = FXCollections.observableArrayList();
+        datyEgz.addAll(main.selectDatyEgzaminow());
+        dateChoiceBox.setItems(datyEgz);
     }
 
     public void dodajPyt() {
@@ -134,6 +148,9 @@ public class PytaniaController extends TabController {
 
     public void reloadPytania() {
         TablePytanie.setItems(main.getObserListPytania());
+    }
+
+    public void dodajPytDoZes(MouseEvent mouseEvent) {
     }
 }
 

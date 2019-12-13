@@ -138,5 +138,24 @@ public class SQLHandler {
             return null;
         }
     }
+
+    public List<String> selectStringList(String sqlSelectCode) {
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet resultSet = stmt.executeQuery(sqlSelectCode);
+            List<String> results = new ArrayList<>();
+            while (resultSet.next()) {
+                results.add(resultSet.getString(1));
+            }
+            return results;
+        } catch (SQLException exception) {
+            String title = "SQLException";
+            String content = "Couldn't execute SELECT DISTINCT DATA_EGZ query.\n" +
+                    "Error Code: " + exception.getErrorCode() + "\n" +
+                    "SQLState: " + exception.getSQLState();
+            System.out.println(content);
+            return null;
+        }
+    }
 }
 

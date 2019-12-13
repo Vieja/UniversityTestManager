@@ -36,7 +36,27 @@
 --     where (ocena_1 is not null and ocena_1!='2.0') or (ocena_1 = '2.0' and ocena_2 is not null and ocena_2!='2.0');
 -- end usun_tych_co_zdali;
 -- /
+
+--CREATE OR REPLACE FUNCTION ilePunktowMaZestaw
+--    (idZes IN NATURAL)
+--RETURN NUMBER IS
+--    vPunkty NUMBER;
+--BEGIN
+-- SELECT SUM(punkty)
+-- INTO vPunkty
+-- FROM zadania zad, zawartosc zaw
+-- WHERE zad.id_zad = zaw.id_zad and zaw.id_zes = idZes;
+--RETURN vPunkty;
+--END ilePunktowMaZestaw;
 --
+--declare
+-- vIle NUMBER;
+--begin
+--vIle := ilePunktowMaZestaw(1);
+--end;
+
+
+
 -- begin
 -- --zaktualizuj_ocene1(to_date('15-12-2019','DD-MM-YYYY'));
 -- --usun_tych_co_zdali();

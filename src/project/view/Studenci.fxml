@@ -138,7 +138,116 @@
                         </BorderPane>
                      </content>
                 </TitledPane>
-                <TitledPane animated="false" text="Stwórz egzamin">
+                  <TitledPane animated="false" text="Dodaj studenta do egzaminu">
+                     <content>
+                        <BorderPane prefHeight="200.0" prefWidth="200.0">
+                           <bottom>
+                              <AnchorPane prefHeight="163.0" prefWidth="457.0" BorderPane.alignment="CENTER">
+                                 <children>
+                                    <Button layoutX="148.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#dodajStudDoZes" prefHeight="42.0" prefWidth="160.0" text="Dodaj" />
+                                 </children>
+                              </AnchorPane>
+                           </bottom>
+                           <center>
+                              <GridPane prefHeight="146.0" prefWidth="457.0" BorderPane.alignment="CENTER">
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="222.4000244140625" minWidth="10.0" prefWidth="182.4000244140625" />
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="273.5999755859375" minWidth="10.0" prefWidth="273.5999755859375" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints maxHeight="52.000006103515624" minHeight="8.000005149841307" prefHeight="20.600018310546872" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="108.7999948501587" minHeight="10.0" prefHeight="62.19996337890625" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="88.80000000000001" minHeight="10.0" prefHeight="63.000036621093756" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="81.5999755859375" minHeight="10.0" prefHeight="19.199987792968756" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label text="Data egzaminu" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label text="Zestaw" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <ChoiceBox fx:id="dateChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <ChoiceBox fx:id="zestawChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                                 </children>
+                              </GridPane>
+                           </center>
+                           <top>
+                              <GridPane alignment="CENTER" prefHeight="328.0" prefWidth="457.0" BorderPane.alignment="CENTER">
+                                 <columnConstraints>
+                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="240.0" minWidth="10.0" prefWidth="233.5999755859375" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="264.7999267578125" minWidth="10.0" prefWidth="220.7999755859375" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.20001220703122" minWidth="10.0" prefWidth="10.4000244140625" />
+                                 </columnConstraints>
+                                 <rowConstraints>
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                                 </rowConstraints>
+                                 <children>
+                                    <Label alignment="CENTER" text="Numer indeksu">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" text="Imię" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" text="Nazwisko" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" text="Ocena - pierwszy termin" GridPane.rowIndex="3">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <Label alignment="CENTER" text="Ocena - drugi termin" GridPane.rowIndex="4">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <TextField fx:id="indeksField1" editable="false" prefHeight="40.0" prefWidth="216.0" GridPane.columnIndex="1">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="imieField1" editable="false" prefHeight="40.0" prefWidth="101.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="nazwiskoField1" editable="false" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="ocena1Field1" editable="false" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="3">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </TextField>
+                                    <TextField fx:id="ocena2Field1" editable="false" prefHeight="40.0" GridPane.columnIndex="1" GridPane.rowIndex="4">
+                                       <font>
+                                          <Font size="16.0" />
+                                       </font>
+                                    </TextField>
+                                 </children>
+                              </GridPane>
+                           </top>
+                        </BorderPane>
+                     </content>
+                  </TitledPane>
+                <TitledPane animated="false" text="Automatycznie stwórz egzamin dla studentów">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                   </content>

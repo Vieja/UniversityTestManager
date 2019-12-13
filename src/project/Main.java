@@ -95,11 +95,12 @@ public class Main extends Application {
         sqlHandler.deleteFrom("DELETE FROM ZADANIA WHERE ID = " + wybrany.getId());
     }
 
-    public void edytujStudentaWBazie(Student wybrany, String id, String imie, String nazw, String oc1, String oc2) {
+    public void edytujStudentaWBazie(Student wybrany, String imie, String nazw, String oc1, String oc2) {
         int position = getObserListStudents().indexOf(wybrany);
         getObserListStudents().remove(wybrany);
         if (oc1.equals("")) oc1 = null;
         if (oc2.equals("")) oc2 = null;
+        String id = String.valueOf(wybrany.getIndeks());
         sqlHandler.updateWhere("UPDATE STUDENCI SET IMIE = '" + imie +"', NAZWISKO = '" + nazw + "', OCENA_1 = " + oc1 +", OCENA_2 = " + oc2 + " WHERE INDEKS = " + id);
         wybrany.setIndeks(Integer.parseInt(id));
         wybrany.setImie(imie);
@@ -125,4 +126,8 @@ public class Main extends Application {
     public List<Integer> sqlSelect(String sqlSelectCode) {
         return sqlHandler.searchWhere(sqlSelectCode);
     }
+
+    public List<String> selectDatyEgzaminow() {return sqlHandler.selectStringList("select distinct to_char(data_egz, 'DD-MM-YYYY day') from zestawy"); }
+    public List<String> selectZestawyZDaty(String data) {return sqlHandler.selectStringList(
+            "select nazwa || ' - ' || termin || ' termin' from zestawy where data_egz = to_date('"+data+"', 'DD-MM-YYYY day')" ); }
 }
