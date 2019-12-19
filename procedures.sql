@@ -10,8 +10,9 @@
 --         where s.indeks = ss.indeks)
 --     where s.indeks in (
 --         select ss.indeks
---         from studenci ss join podejscia p on (ss.indeks = p.indeks)
---         where p.data_pod = dataEgz and p.termin = 'pierwszy');
+--         from studenci ss, podejscia p, zestawy z
+--         where ss.indeks = p.indeks and z.id_zes = p.id_zes and
+--                 z.data_egz = dataEgz and z.termin = 'pierwszy');
 -- end zaktualizuj_ocene1;
 --
 --
@@ -25,8 +26,9 @@
 --         where s.indeks = ss.indeks)
 --     where s.indeks in (
 --         select ss.indeks
---         from studenci ss join podejscia p on (ss.indeks = p.indeks)
---         where p.data_pod = dataEgz and p.termin != 'pierwszy');
+--         from studenci ss, podejscia p, zestawy z
+--         where ss.indeks = p.indeks and z.id_zes = p.id_zes and
+--               z.data_egz = dataEgz and z.termin != 'pierwszy');
 -- end zaktualizuj_ocene2;
 -- /
 --
