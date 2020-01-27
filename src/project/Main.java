@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import project.classes.Pytanie;
@@ -85,42 +86,132 @@ public class Main extends Application {
         launch(args);
     }
 
-    public void usunStudentaZBazy(Student wybrany) {
-        getObserListStudents().remove(wybrany);
-        sqlHandler.deleteFrom("DELETE FROM STUDENCI WHERE INDEKS = " + wybrany.getIndeks());
-    }
 
-    public void usunPytanieZBazy(Pytanie wybrany) {
-        getObserListPytania().remove(wybrany);
-        sqlHandler.deleteFrom("DELETE FROM ZADANIA WHERE ID = " + wybrany.getId());
+    public void dodajStudentaDoBazy(Student student) {
+        int error;
+        try {
+            String indeks = String.valueOf(student.getIndeks());
+            String imie = student.getImie();
+            String nazwisko = student.getNazwisko();
+            String oc1 = student.getOcena_1();
+            String oc2 = student.getOcena_2();
+            if (oc1.equals("")) oc1 = null;
+            else oc1 = "'" + oc1 + "'";
+            if (oc2.equals("")) oc2 = null;
+            else oc2 = "'" + oc2 + "'";
+            error = sqlHandler.insertInto("INSERT INTO STUDENCI (INDEKS, IMIE, NAZWISKO, OCENA_1, OCENA_2) VALUES (" + indeks + ", '" + imie + "', '" + nazwisko + "', " + oc1 + ", " + oc2 + ")");
+        } catch (NumberFormatException e) {
+            error = -1;
+        }
+        switch (error) {
+            case 0:
+                getObserListStudents().add(student);
+                break;
+            case 2290:
+                showError("Błąd dodawania","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                break;
+            case 1:
+                showError("Błąd dodawania","Istnieje już student z takim indeksem");
+                break;
+            case 12899:
+                showError("Błąd dodawania","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                break;
+            case -1:
+                showError("Błąd dodawania","Indeks musi być liczbą");
+                break;
+
+        }
     }
 
     public void edytujStudentaWBazie(Student wybrany, String imie, String nazw, String oc1, String oc2) {
-        int position = getObserListStudents().indexOf(wybrany);
-        getObserListStudents().remove(wybrany);
-        if (oc1.equals("")) oc1 = null;
-        if (oc2.equals("")) oc2 = null;
         String id = String.valueOf(wybrany.getIndeks());
-        sqlHandler.updateWhere("UPDATE STUDENCI SET IMIE = '" + imie +"', NAZWISKO = '" + nazw + "', OCENA_1 = " + oc1 +", OCENA_2 = " + oc2 + " WHERE INDEKS = " + id);
-        wybrany.setIndeks(Integer.parseInt(id));
-        wybrany.setImie(imie);
-        wybrany.setNazwisko(nazw);
-        wybrany.setOcena_1(oc1);
-        wybrany.setOcena_2(oc2);
-        getObserListStudents().add(position, wybrany);
+        String oc1_string = oc1;
+        String oc2_string = oc2;
+        if (oc1_string.equals("")) oc1_string = null; else oc1_string = "'"+oc1_string+"'";
+        if (oc2_string.equals("")) oc2_string = null; else oc2_string = "'"+oc2_string+"'";
+        int error = sqlHandler.updateWhere("UPDATE STUDENCI SET IMIE = '" + imie +"', NAZWISKO = '" + nazw + "', OCENA_1 = " + oc1_string +", OCENA_2 = " + oc2_string + " WHERE INDEKS = " + id);
+        switch (error) {
+            case 0:
+                wybrany.setImie(imie);
+                wybrany.setNazwisko(nazw);
+                wybrany.setOcena_1(oc1);
+                wybrany.setOcena_2(oc2);
+                break;
+            case 2290:
+                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                break;
+            case 12899:
+                showError("Błąd edycji","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                break;
+        }
+    }
+
+    public void usunStudentaZBazy(Student wybrany) {
+        boolean czy = getObserListStudents().contains(wybrany);
+        if (czy) {
+            getObserListStudents().remove(wybrany);
+            sqlHandler.deleteFrom("DELETE FROM STUDENCI WHERE INDEKS = " + wybrany.getIndeks());
+        } else showError("Błąd usuwania","Nie wybrałeś żadnego studenta");
+
+    }
+
+    public void dodajPytanieDoBazy(String tresc, String punkty) {
+        int error;
+        float punkciki = 0;
+        try {
+            punkciki = Float.parseFloat(punkty);
+            error = sqlHandler.insertInto("INSERT INTO ZADANIA (ID_ZAD, TRESC, PUNKTY) VALUES (zadania_sequence.nextval, '"+tresc+"', "+punkciki+")");
+        } catch (NumberFormatException e) {
+            error = -1;
+        }
+        switch (error) {
+            case 0:
+                int id_pyt = sqlHandler.getID("zadania_sequence")+1;
+                Pytanie pyt = new Pytanie(id_pyt, tresc, punkciki);
+                getObserListPytania().add(pyt);
+                break;
+            case 2290:
+                showError("Błąd dodawania", "Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                break;
+            case 12899:
+                showError("Błąd dodawania","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                break;
+            case -1:
+                showError("Błąd dodawania","Niepoprawna wartość punktów");
+                break;
+        }
     }
 
     public void edytujPytanieWBazie(Pytanie wybrany, String tresc, String punkty) {
-        int position = getObserListPytania().indexOf(wybrany);
-        getObserListPytania().remove(wybrany);
-        String id = String.valueOf(wybrany.getId());
-        Exception update_error = sqlHandler.updateWhere("UPDATE ZADANIA SET TRESC = '" + tresc +"', PUNKTY = " + punkty + " WHERE ID_ZAD = " + id);
-        if (update_error == null) {
-            wybrany.setId(Integer.parseInt(id));
-            wybrany.setTresc(tresc);
-            wybrany.setPunkty(Float.parseFloat(punkty));
-            getObserListPytania().add(position, wybrany);
+        int error;
+        float punkciki = 0;
+        try {
+            String id = String.valueOf(wybrany.getId());
+            punkciki = Float.parseFloat(punkty);
+            error = sqlHandler.updateWhere("UPDATE ZADANIA SET TRESC = '" + tresc +"', PUNKTY = " + punkty + " WHERE ID_ZAD = " + id);
+        } catch (NumberFormatException e) {
+            error = -1;
         }
+        switch (error) {
+            case 0:
+                wybrany.setTresc(tresc);
+                wybrany.setPunkty(punkciki);
+                break;
+            case 1438:
+                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                break;
+            case -1:
+                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                break;
+        }
+    }
+
+    public void usunPytanieZBazy(Pytanie wybrany) {
+        boolean czy = getObserListPytania().contains(wybrany);
+        if (czy) {
+            getObserListPytania().remove(wybrany);
+            sqlHandler.deleteFrom("DELETE FROM ZADANIA WHERE ID = " + wybrany.getId());
+        } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
     }
 
     public List<Integer> sqlSelect(String sqlSelectCode) {
@@ -130,4 +221,13 @@ public class Main extends Application {
     public List<String> selectDatyEgzaminow() {return sqlHandler.selectStringList("select distinct to_char(data_egz, 'DD-MM-YYYY day') from zestawy"); }
     public List<String> selectZestawyZDaty(String data) {return sqlHandler.selectStringList(
             "select nazwa || ' - ' || termin || ' termin' from zestawy where data_egz = to_date('"+data+"', 'DD-MM-YYYY day')" ); }
+
+    public void showError(String title, String content) {
+
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(content);
+        alert.showAndWait();
+
+    }
 }

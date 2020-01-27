@@ -98,6 +98,7 @@ public class PytaniaController extends TabController {
     }
 
     public void dodajPyt() {
+        main.dodajPytanieDoBazy(trescField.getText(),punktyField.getText());
     }
 
     public void edytujPyt() {

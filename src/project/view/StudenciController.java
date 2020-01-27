@@ -126,7 +126,10 @@ public class StudenciController extends TabController {
     }
 
     public void dodajStud() {
+        Student student = new Student(Integer.parseInt(indeksField.getText()), imieField.getText(), nazwiskoField.getText(), ocena1Field.getText(), ocena2Field.getText());
+        main.dodajStudentaDoBazy(student);
     }
+
 
     public void edytujStud() {
         main.edytujStudentaWBazie(wybrany, imieField.getText(), nazwiskoField.getText(), ocena1Field.getText(), ocena2Field.getText());

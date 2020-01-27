@@ -42,6 +42,7 @@ public class RootController {
         this.main=main;
         initTab(id_tab1, "Studenci.fxml");
         initTab(id_tab4, "Pytania.fxml");
+        initTab(id_tab2, "Wyniki.fxml");
 
     }
 }

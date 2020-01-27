@@ -86,6 +86,24 @@ public class SQLHandler {
         return null;
     }
 
+    public int insertInto (String request){
+        Statement stmt;
+        int rows;
+        try {
+            stmt = conn.createStatement();
+            System.out.println(request);
+            rows = stmt.executeUpdate(request);
+            System.out.println(rows + " for 'INSERT'");
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute INSERT INTO query.");
+            System.out.println("Error Code: " + exception.getErrorCode());
+            System.out.println("SQLState: " + exception.getSQLState());
+            return exception.getErrorCode();
+        }
+        return 0;
+
+    }
+
     public void deleteFrom (String request){
         Statement stmt;
         int rows;
@@ -101,7 +119,7 @@ public class SQLHandler {
         }
     }
 
-    public Exception updateWhere (String request){
+    public int updateWhere (String request){
         Statement stmt;
         int rows;
         try {
@@ -113,9 +131,9 @@ public class SQLHandler {
             System.out.println("Couldn't execute UPDATE WHERE query.");
             System.out.println("Error Code: " + exception.getErrorCode());
             System.out.println("SQLState: " + exception.getSQLState());
-            return exception;
+            return exception.getErrorCode();
         }
-        return null;
+        return 0;
     }
 
     public List<Integer> searchWhere (String sqlSelectCode){
@@ -155,6 +173,23 @@ public class SQLHandler {
                     "SQLState: " + exception.getSQLState();
             System.out.println(content);
             return null;
+        }
+    }
+
+    public int getID(String zadania_sequence) {
+        try {
+            Statement stmt = conn.createStatement();
+            ResultSet resultSet = stmt.executeQuery("SELECT current_value FROM sys.sequences WHERE name = '"+zadania_sequence+"'");
+            resultSet.next();
+            int result = resultSet.getInt(1);
+            return result;
+        } catch (SQLException exception) {
+            String title = "SQLException";
+            String content = "Couldn't execute SELECT DISTINCT DATA_EGZ query.\n" +
+                    "Error Code: " + exception.getErrorCode() + "\n" +
+                    "SQLState: " + exception.getSQLState();
+            System.out.println(content);
+            return -1;
         }
     }
 }

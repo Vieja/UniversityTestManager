@@ -34,7 +34,7 @@ CREATE TABLE PODEJSCIA
 CREATE TABLE ZADANIA
        (ID_ZAD NUMBER(6) DEFAULT zadania_sequence.nextval CONSTRAINT PK_ZAD PRIMARY KEY,
 	TRESC VARCHAR2(255) not null,
-    PUNKTY NUMBER (2,1) CHECK (PUNKTY>0) not null
+    PUNKTY NUMBER (3,1) CHECK (PUNKTY>0) not null
     );
 
 CREATE TABLE ZAWARTOSC
@@ -201,9 +201,9 @@ INSERT INTO STUDENCI VALUES (135361,'Michał','Szymański',null,null);
 INSERT INTO STUDENCI VALUES (135362,'Natalia','Brzezińska',null,null);
 INSERT INTO STUDENCI VALUES (135363,'Waldemar','Stępień',null,null);
 
-INSERT INTO ZESTAWY VALUES (1,'A',to_date('05-12-2019','DD-MM-YYYY'), 'pierwszy');
-INSERT INTO ZESTAWY VALUES (2,'B',to_date('05-12-2019','DD-MM-YYYY'), 'pierwszy');
-INSERT INTO ZESTAWY VALUES (3,'C',to_date('05-12-2019','DD-MM-YYYY'), 'pierwszy');
+INSERT INTO ZESTAWY VALUES (zestawy_sequence.nextval,'A',to_date('05-12-2019','DD-MM-YYYY'), 'pierwszy');
+INSERT INTO ZESTAWY VALUES (zestawy_sequence.nextval,'B',to_date('05-12-2019','DD-MM-YYYY'), 'pierwszy');
+INSERT INTO ZESTAWY VALUES (zestawy_sequence.nextval,'C',to_date('05-12-2019','DD-MM-YYYY'), 'pierwszy');
 
 INSERT INTO PODEJSCIA VALUES (135217,1,'2.0');
 INSERT INTO PODEJSCIA VALUES (135218,1,'4.0');
@@ -244,47 +244,49 @@ INSERT INTO PODEJSCIA VALUES (135349,3,'3.5');
 INSERT INTO PODEJSCIA VALUES (135355,3,'4.0');
 INSERT INTO PODEJSCIA VALUES (135359,1,'3.0');
 
-INSERT INTO ZADANIA VALUES (1, 'Oblicz pole koła o promieniu 3 cm', 1);
-INSERT INTO ZADANIA VALUES (2, 'Masz 30 orzechów, rozdaj po 6 dzieciom. Ile dzieci obdzielisz orzechami?', 2);
-INSERT INTO ZADANIA VALUES (3, 'Na czym polega konfiguracja VLAN na przełączniku?' , 2);
-INSERT INTO ZADANIA VALUES (4, 'Jakie urządzenia sieciowe mogą wspierać VLAN?', 1);
-INSERT INTO ZADANIA VALUES (5, 'Jak działa CSMA/CA?', 1.5);
-INSERT INTO ZADANIA VALUES (6, 'Jakie są typy ramek w sieciach wifi?', 1.5);
-INSERT INTO ZADANIA VALUES (7, 'Jak działa odwzorowanie nazwy domenowej?', 3);
-INSERT INTO ZADANIA VALUES (8, 'Jak wygląda hierarchia domen?', 2);
-INSERT INTO ZADANIA VALUES (9, 'Jak wygląda adres loopback?', 4);
-INSERT INTO ZADANIA VALUES (10, 'Na czym polega tunelowanie i jak można je zastosować do IPv6?', 5);
-INSERT INTO ZADANIA VALUES (11, 'Jaka jest domyślna kolejka w systemie Linux?', 1.5);
-INSERT INTO ZADANIA VALUES (12, 'Wyznaczyć wszystkie liczby całkowite n, dla których równanie 2 sin nx = tg x + ctg x ma rozwiązania w liczbach rzeczywistych x', 3);
-INSERT INTO ZADANIA VALUES (13, 'Rozstrzygnąć, czy istnieją takie dwa przystające sześciany o wspólnym środku, że każda ściana pierwszego sześcianu ma punkt wspólny z każdą ścianą drugiego sześcianu.', 4.5);
-INSERT INTO ZADANIA VALUES (14, 'Co to znaczy, że algorytm obliczeniowy jest numerycznie stabilny?', 4);
-INSERT INTO ZADANIA VALUES (15, 'Sformułować zadanie interpolacyjne Lagrange’a i udowodnić jednoznaczność jego rozwiązania', 2.5);
-INSERT INTO ZADANIA VALUES (16, 'Sformułować zadanie interpolacyjne Hermite’a.', 4);
-INSERT INTO ZADANIA VALUES (17, 'Opisać algorytm wyznaczania naturalnej funkcji sklejanej stopnia trzeciego.', 3);
-INSERT INTO ZADANIA VALUES (18, 'Opisać algorytm eliminacji Gaussa z pełnym wyborem elementu podstawowego.', 1);
-INSERT INTO ZADANIA VALUES (19, 'Co to znaczy, że rzeczywista macierz kwadratowa A jest dodatnio określona?', 1);
-INSERT INTO ZADANIA VALUES (20, 'W jaki sposób otrzymuje się metody iteracyjne rozwiązywania układów równań liniowych?', 1.5);
-INSERT INTO ZADANIA VALUES (21, 'Opisać metodę regula-falsi służącą do wyznaczania pierwiastka równania nieliniowego f(x) = 0.', 2);
-INSERT INTO ZADANIA VALUES (22, 'Opisać metodę Newtona służącą do rozwiązywania układu równań nieliniowch f(x) = 0.', 3.5);
-INSERT INTO ZADANIA VALUES (23, 'Opisać metodę Bairstowa wyznaczania pierwiastków wielomianu.', 5);
-INSERT INTO ZADANIA VALUES (24, 'Podać definicję ciągu Sturma.', 2.5);
-INSERT INTO ZADANIA VALUES (25, 'Za pomocą algorytmu Hornera znaleźć iloraz z dzielenia wielomianu w(x) przez dwumian x + 1', 3);
-INSERT INTO ZADANIA VALUES (26, 'Za pomocą algorytmu Hornera znaleźć wartości wszystkich znormalizowanych pochodnych wielomianu w(x) w punkcie x = 2', 4.5);
-INSERT INTO ZADANIA VALUES (27, 'Dla jakich wartości a, b, c funkcja S(x) może być w przedziale [0, 3) naturalną funkcją sklejaną stopnia trzeciego?', 1);
-INSERT INTO ZADANIA VALUES (28, 'Co to jest shareware?', 2.5);
-INSERT INTO ZADANIA VALUES (29, 'Do czego był wykorzystany ENIAC ?', 2);
-INSERT INTO ZADANIA VALUES (30, 'Czym zajmuje się Electronic Frontier Foundation ?', 3.5);
-INSERT INTO ZADANIA VALUES (31, 'Różnica pomiędzy freeware, a oprogramowaniem otwartym.', 3);
-INSERT INTO ZADANIA VALUES (32, 'Na czym polega koncepcja von Neumana ?', 5);
-INSERT INTO ZADANIA VALUES (33, 'Co to jest EULA ?', 1);
-INSERT INTO ZADANIA VALUES (34, 'Wyjaśnij pojęcia krój szeryfowy i bezszeryfowy, proporcjonalny i nieproporcjonalny', 3.5);
-INSERT INTO ZADANIA VALUES (35, 'Jaki mechanizm systemu chroni przed zawłaszczeniem procesora przez przetwarzanie aplikacyjne?', 5);
-INSERT INTO ZADANIA VALUES (36, 'Na czym polega ograniczenie zakresu adresów, dostępnych w czasie przetwarzania aplikacyjnego?', 3.5);
-INSERT INTO ZADANIA VALUES (37, 'Jak należy zaklasyfikować przerwania będące następstwem dzielenia przez zero?', 2.5);
-INSERT INTO ZADANIA VALUES (38, 'Jakie mogłyby być skutki udostępniania operacji wejścia-wyjścia w trybie użytkownika dla funkcjonowania systemu komputerowego?', 5);
-INSERT INTO ZADANIA VALUES (39, 'W jaki sposób przekazywane jest sterowanie do jądra systemu operacyjnego?', 1);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Oblicz pole koła o promieniu 3 cm', 1);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Masz 30 orzechów, rozdaj po 6 dzieciom. Ile dzieci obdzielisz orzechami?', 2);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Na czym polega konfiguracja VLAN na przełączniku?' , 2);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jakie urządzenia sieciowe mogą wspierać VLAN?', 1);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jak działa CSMA/CA?', 1.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jakie są typy ramek w sieciach wifi?', 1.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jak działa odwzorowanie nazwy domenowej?', 3);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jak wygląda hierarchia domen?', 2);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jak wygląda adres loopback?', 4);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Na czym polega tunelowanie i jak można je zastosować do IPv6?', 5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jaka jest domyślna kolejka w systemie Linux?', 1.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Wyznaczyć wszystkie liczby całkowite n, dla których równanie 2 sin nx = tg x + ctg x ma rozwiązania w liczbach rzeczywistych x', 3);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Rozstrzygnąć, czy istnieją takie dwa przystające sześciany o wspólnym środku, że każda ściana pierwszego sześcianu ma punkt wspólny z każdą ścianą drugiego sześcianu.', 4.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Co to znaczy, że algorytm obliczeniowy jest numerycznie stabilny?', 4);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Sformułować zadanie interpolacyjne Lagrange’a i udowodnić jednoznaczność jego rozwiązania', 2.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Sformułować zadanie interpolacyjne Hermite’a.', 4);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Opisać algorytm wyznaczania naturalnej funkcji sklejanej stopnia trzeciego.', 3);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Opisać algorytm eliminacji Gaussa z pełnym wyborem elementu podstawowego.', 1);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Co to znaczy, że rzeczywista macierz kwadratowa A jest dodatnio określona?', 1);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'W jaki sposób otrzymuje się metody iteracyjne rozwiązywania układów równań liniowych?', 1.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Opisać metodę regula-falsi służącą do wyznaczania pierwiastka równania nieliniowego f(x) = 0.', 2);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Opisać metodę Newtona służącą do rozwiązywania układu równań nieliniowch f(x) = 0.', 3.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Opisać metodę Bairstowa wyznaczania pierwiastków wielomianu.', 5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Podać definicję ciągu Sturma.', 2.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Za pomocą algorytmu Hornera znaleźć iloraz z dzielenia wielomianu w(x) przez dwumian x + 1', 3);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Za pomocą algorytmu Hornera znaleźć wartości wszystkich znormalizowanych pochodnych wielomianu w(x) w punkcie x = 2', 4.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Dla jakich wartości a, b, c funkcja S(x) może być w przedziale [0, 3) naturalną funkcją sklejaną stopnia trzeciego?', 1);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Co to jest shareware?', 2.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Do czego był wykorzystany ENIAC ?', 2);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Czym zajmuje się Electronic Frontier Foundation ?', 3.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Różnica pomiędzy freeware, a oprogramowaniem otwartym.', 3);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Na czym polega koncepcja von Neumana ?', 5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Co to jest EULA ?', 1);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Wyjaśnij pojęcia krój szeryfowy i bezszeryfowy, proporcjonalny i nieproporcjonalny', 3.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jaki mechanizm systemu chroni przed zawłaszczeniem procesora przez przetwarzanie aplikacyjne?', 5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Na czym polega ograniczenie zakresu adresów, dostępnych w czasie przetwarzania aplikacyjnego?', 3.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jak należy zaklasyfikować przerwania będące następstwem dzielenia przez zero?', 2.5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'Jakie mogłyby być skutki udostępniania operacji wejścia-wyjścia w trybie użytkownika dla funkcjonowania systemu komputerowego?', 5);
+INSERT INTO ZADANIA VALUES (zadania_sequence.nextval, 'W jaki sposób przekazywane jest sterowanie do jądra systemu operacyjnego?', 1);
 
 
 INSERT INTO ZAWARTOSC VALUES (1,13);
 INSERT INTO ZAWARTOSC VALUES (2,5);
 INSERT INTO ZAWARTOSC VALUES (3,8);
+
+commit;
