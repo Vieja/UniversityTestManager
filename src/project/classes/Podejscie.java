@@ -9,9 +9,10 @@ public class Podejscie {
     private int id_zes;
     private String ocena;
 
-    public Podejscie(Student student, int id_zes) {
+    public Podejscie(Student student, int id_zes, String ocena) {
         this.student = student;
         this.id_zes = id_zes;
+        this.ocena = ocena;
     }
 
     public Student getStudent() {
@@ -40,6 +41,14 @@ public class Podejscie {
 
     public String getStudentNazwisko() {
         return student.getNazwisko();
+    }
+
+    public int getId_zes() {
+        return id_zes;
+    }
+
+    public void setId_zes(int id_zes) {
+        this.id_zes = id_zes;
     }
 
     public StringProperty getStudentImieProperty() {

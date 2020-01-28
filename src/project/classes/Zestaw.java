@@ -2,6 +2,7 @@ package project.classes;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ObservableValue;
 
 import java.util.ArrayList;
 
@@ -57,4 +58,8 @@ public class Zestaw {
         return new SimpleStringProperty(nazwa);
     }
     public StringProperty getDataProperty() { return new SimpleStringProperty(String.valueOf(data)); }
+    public StringProperty getTerminProperty() {
+        return new SimpleStringProperty(termin);
+    }
+
 }

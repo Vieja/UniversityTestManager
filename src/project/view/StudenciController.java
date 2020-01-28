@@ -123,6 +123,8 @@ public class StudenciController extends TabController {
         ObservableList<String> datyEgz = FXCollections.observableArrayList();
         datyEgz.addAll(main.selectDatyEgzaminow());
         dateChoiceBox.setItems(datyEgz);
+        dateChoiceBox.getSelectionModel().selectFirst();
+        zestawChoiceBox.getSelectionModel().selectFirst();
     }
 
     public void dodajStud() {
@@ -189,6 +191,9 @@ public class StudenciController extends TabController {
         TableStudent.setItems(main.getObserListStudents());
     }
 
-    public void dodajStudDoZes(MouseEvent mouseEvent) {
+    public void dodajStudDoPod() {
+        String data = dateChoiceBox.getValue();
+        String zestaw = zestawChoiceBox.getValue();
+        main.dodajPodejscieDoBazy(wybrany, data, zestaw);
     }
 }

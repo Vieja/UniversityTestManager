@@ -118,7 +118,7 @@ public class SQLHandler {
             while (rs.next()) {
                 Student student = new Student(rs.getInt(1),rs.getString(3),
                         rs.getString(4),null,null);
-                Podejscie pod = new Podejscie(student, id_zes);
+                Podejscie pod = new Podejscie(student, id_zes, rs.getString(2));
                 main.getObserListPodejscia().add(pod);
             }
         } catch (Exception exception) {
@@ -132,9 +132,11 @@ public class SQLHandler {
         int rows;
         try {
             stmt = conn.createStatement();
+            conn.setAutoCommit(false);
             System.out.println(request);
             rows = stmt.executeUpdate(request);
             System.out.println(rows + " for 'INSERT'");
+            conn.commit();
         } catch (SQLException exception) {
             System.out.println("Couldn't execute INSERT INTO query.");
             System.out.println("Error Code: " + exception.getErrorCode());
@@ -150,9 +152,11 @@ public class SQLHandler {
         int rows;
         try {
             stmt = conn.createStatement();
+            conn.setAutoCommit(false);
             System.out.println(request);
             rows = stmt.executeUpdate(request);
             System.out.println(rows + " for 'DELETE'");
+            conn.commit();
         } catch (SQLException exception) {
             System.out.println("Couldn't execute DELETE FROM query.");
             System.out.println("Error Code: " + exception.getErrorCode());
@@ -165,9 +169,11 @@ public class SQLHandler {
         int rows;
         try {
             stmt = conn.createStatement();
+            conn.setAutoCommit(false);
             System.out.println(request);
             rows = stmt.executeUpdate(request);
             System.out.println(rows + " for 'UPDATE'");
+            conn.commit();
         } catch (SQLException exception) {
             System.out.println("Couldn't execute UPDATE WHERE query.");
             System.out.println("Error Code: " + exception.getErrorCode());

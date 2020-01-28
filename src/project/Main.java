@@ -258,4 +258,42 @@ public class Main extends Application {
         alert.showAndWait();
 
     }
+
+    public void zmienOcenePodejscia(Podejscie wybrany, String oc1) {
+        String id = String.valueOf(wybrany.getStudentIndeks());
+        String id_zes = String.valueOf(wybrany.getId_zes());
+        if (oc1.equals("")) oc1 = null;
+        String oc11 = oc1;
+        if (oc11 != null) oc11 = "'"+oc11+"'";
+        int error = sqlHandler.updateWhere("UPDATE PODEJSCIA SET OCENA = " + oc11 +" WHERE INDEKS = " + id + " AND ID_ZES = "+id_zes);
+        switch (error) {
+            case 0:
+                wybrany.setOcena(oc1);
+                break;
+            case 2290:
+                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                break;
+            case 12899:
+                showError("Błąd edycji","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                break;
+        }
+    }
+
+    public void usunPodejscieZBazy(Podejscie wybrany) {
+        boolean czy = getObserListPodejscia().contains(wybrany);
+        if (czy) {
+            getObserListPodejscia().remove(wybrany);
+            sqlHandler.deleteFrom("DELETE FROM PODEJSCIA WHERE INDEKS = " + wybrany.getStudentIndeks() + " AND ID_ZES = " + wybrany.getId_zes());
+        } else showError("Błąd usuwania","Nie wybrałeś żadnego studenta");
+    }
+
+    public void dodajPodejscieDoBazy(Student wybrany, String data, String zestaw) {
+        data = data.split(" ")[0];
+        String[] dane = data.split("-");
+        data = dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0";
+        String nazwa = zestaw.split(" ")[0];
+        System.out.println(data);
+        System.out.println(nazwa);
+        // TODO dokończyć
+    }
 }

@@ -17,12 +17,14 @@ import java.util.List;
 
 public class WynikiController extends TabController{
 
+
     Main main;
 
     public TableView<Zestaw> TableZestaw;
     public TableView<Podejscie> TableStudent;
     public ChoiceBox<String> dateChoiceBox;
     public TableColumn<Zestaw, String> ColumnZestawNazwa;
+    public TableColumn<Zestaw, String> ColumnZestawTermin;
     public TableColumn<Podejscie, String> ColumnStudentIndeks;
     public TableColumn<Podejscie, String> ColumnStudentImie;
     public TableColumn<Podejscie, String> ColumnStudentNazwisko;
@@ -80,6 +82,7 @@ public class WynikiController extends TabController{
         );
 
         ColumnZestawNazwa.setCellValueFactory(cellData -> cellData.getValue().getNazwaProperty());
+        ColumnZestawTermin.setCellValueFactory(cellData -> cellData.getValue().getTerminProperty());
 
         ColumnStudentIndeks.setCellValueFactory(cellData -> cellData.getValue().getStudentIndeksProperty());
         ColumnStudentImie.setCellValueFactory(cellData -> cellData.getValue().getStudentImieProperty());
@@ -102,10 +105,15 @@ public class WynikiController extends TabController{
     public void zaktualizujOceny(MouseEvent mouseEvent) {
     }
 
-    public void zapiszOcene(MouseEvent mouseEvent) {
+    public void zapiszOcene() {
+        main.zmienOcenePodejscia(wybrany, ocenaField.getText());
+        TableStudent.refresh();
+        TableStudent.getColumns().get(0).setVisible(false);
+        TableStudent.getColumns().get(0).setVisible(true);
     }
 
-    public void usunZPodejscia(MouseEvent mouseEvent) {
+    public void usunZPodejscia() {
+        main.usunPodejscieZBazy(wybrany);
     }
 
     @Override
@@ -114,6 +122,6 @@ public class WynikiController extends TabController{
         ObservableList<String> datyEgz = FXCollections.observableArrayList();
         datyEgz.addAll(main.selectDatyEgzaminow());
         dateChoiceBox.setItems(datyEgz);
-
+        dateChoiceBox.getSelectionModel().selectFirst();
     }
 }

@@ -144,7 +144,7 @@
                            <bottom>
                               <AnchorPane prefHeight="163.0" prefWidth="457.0" BorderPane.alignment="CENTER">
                                  <children>
-                                    <Button layoutX="148.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#dodajStudDoZes" prefHeight="42.0" prefWidth="160.0" text="Dodaj" />
+                                    <Button layoutX="148.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#dodajStudDoPod" prefHeight="42.0" prefWidth="160.0" text="Dodaj" />
                                  </children>
                               </AnchorPane>
                            </bottom>
