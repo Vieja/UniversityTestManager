@@ -1,26 +1,103 @@
 package project.view;
 
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import project.Main;
+import project.classes.Podejscie;
+import project.classes.Student;
+import project.classes.Zestaw;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WynikiController extends TabController{
-    public TableView TableZestaw;
-    public TableView TableStudent;
-    public ChoiceBox dateChoiceBox;
-    public TableColumn ColumnZestawNazwa;
-    public TableColumn ColumnZestawLiczba;
-    public TableColumn ColumnStudentIndeks;
-    public TableColumn ColumnStudentImie;
-    public TableColumn ColumnStudentNazwisko;
-    public TableColumn ColumnStudentOcena;
+
+    Main main;
+
+    public TableView<Zestaw> TableZestaw;
+    public TableView<Podejscie> TableStudent;
+    public ChoiceBox<String> dateChoiceBox;
+    public TableColumn<Zestaw, String> ColumnZestawNazwa;
+    public TableColumn<Podejscie, String> ColumnStudentIndeks;
+    public TableColumn<Podejscie, String> ColumnStudentImie;
+    public TableColumn<Podejscie, String> ColumnStudentNazwisko;
+    public TableColumn<Podejscie, String> ColumnStudentOcena;
     public TextField ocenaField;
     public TextField imieField1;
     public TextField nazwiskoField1;
     public TextField indeksField1;
+    public SplitPane split1;
+    public SplitPane split2;
+
+    public Podejscie wybrany = null;
+
+    @FXML
+    private void initialize() {
+        SplitPane.Divider divider = split1.getDividers().get(0);
+        divider.positionProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
+                divider.setPosition(0.5);
+            }
+        });
+
+        SplitPane.Divider divider2 = split2.getDividers().get(0);
+        divider2.positionProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
+                divider2.setPosition(0.9385);
+            }
+        });
+
+        dateChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
+                String data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
+                data = data.split(" ")[0];
+                TableZestaw.setItems(main.getObserListZestawyKtoreSaZDaty(data));
+            }
+        });
+
+        TableZestaw.getSelectionModel().selectedItemProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    if(newValue != null) {
+                        TableStudent.setItems(main.getObserListPodejsciaZZestawu(newValue));
+                    }
+                })
+        );
+
+        TableStudent.getSelectionModel().selectedItemProperty().addListener(
+                ((observable, oldValue, newValue) -> {
+                    if(newValue != null) {
+                        showStudent(newValue);
+                    }
+                })
+        );
+
+        ColumnZestawNazwa.setCellValueFactory(cellData -> cellData.getValue().getNazwaProperty());
+
+        ColumnStudentIndeks.setCellValueFactory(cellData -> cellData.getValue().getStudentIndeksProperty());
+        ColumnStudentImie.setCellValueFactory(cellData -> cellData.getValue().getStudentImieProperty());
+        ColumnStudentNazwisko.setCellValueFactory(cellData -> cellData.getValue().getStudentNazwiskoProperty());
+        ColumnStudentOcena.setCellValueFactory(cellData -> cellData.getValue().getOcenaProperty());
+    }
+
+    private void showStudent(Podejscie pod) {
+        indeksField1.setText(String.valueOf(pod.getStudentIndeks()));
+        imieField1.setText(pod.getStudentImie());
+        nazwiskoField1.setText(pod.getStudentNazwisko());
+        if (pod.getOcena() == null) {
+            ocenaField.setText("");
+        } else {
+            ocenaField.setText(pod.getOcena());
+        }
+        wybrany = pod;
+    }
 
     public void zaktualizujOceny(MouseEvent mouseEvent) {
     }
@@ -33,6 +110,10 @@ public class WynikiController extends TabController{
 
     @Override
     public void setApp(Main main) {
+        this.main = main;
+        ObservableList<String> datyEgz = FXCollections.observableArrayList();
+        datyEgz.addAll(main.selectDatyEgzaminow());
+        dateChoiceBox.setItems(datyEgz);
 
     }
 }

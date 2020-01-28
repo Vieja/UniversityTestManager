@@ -9,13 +9,15 @@ public class Zestaw {
     private int id;
     private String nazwa;
     private String data;
+    private String termin;
     ArrayList<Pytanie> listaPytan = new ArrayList<>();
-    ArrayList<Student> listaStudentow = new ArrayList<>();
+    ArrayList<Podejscie> listaPodejsc = new ArrayList<>();
 
-    public Zestaw(int id, String nazwa, String data ) {
+    public Zestaw(int id, String nazwa, String data, String termin) {
         this.id = id;
         this.nazwa = nazwa;
         this.data = data;
+        this.termin = termin;
     }
 
     public int getId() {

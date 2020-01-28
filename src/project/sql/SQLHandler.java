@@ -1,8 +1,10 @@
 package project.sql;
 
 import project.Main;
+import project.classes.Podejscie;
 import project.classes.Pytanie;
 import project.classes.Student;
+import project.classes.Zestaw;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -86,6 +88,45 @@ public class SQLHandler {
         return null;
     }
 
+    public Exception selectZestawy() {
+        ResultSet rsZestaw = selectALL("zestawy");
+        main.getObserListZestawy().removeAll();
+        try{
+            while (rsZestaw.next()) {
+                Zestaw zestaw = new Zestaw(
+                        rsZestaw.getInt(1), rsZestaw.getString(2),
+                        rsZestaw.getString(3), rsZestaw.getString(4));
+                main.getObserListZestawy().add(zestaw);
+            }
+        } catch (Exception exception) {
+            return exception;
+        }
+        return null;
+    }
+
+    public Exception selectPodejscia(int id_zes) {
+        Statement stmt;
+        ResultSet rs = null;
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("select p.indeks, p.ocena, s.imie, s.nazwisko "+
+                            "from podejscia p, studenci s where p.indeks = s.indeks and id_zes = "+id_zes);
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute SELECT query.");
+        }
+        try{
+            while (rs.next()) {
+                Student student = new Student(rs.getInt(1),rs.getString(3),
+                        rs.getString(4),null,null);
+                Podejscie pod = new Podejscie(student, id_zes);
+                main.getObserListPodejscia().add(pod);
+            }
+        } catch (Exception exception) {
+            return exception;
+        }
+        return null;
+    }
+
     public int insertInto (String request){
         Statement stmt;
         int rows;
@@ -136,7 +177,7 @@ public class SQLHandler {
         return 0;
     }
 
-    public List<Integer> searchWhere (String sqlSelectCode){
+    public List<Integer> selectIntegers(String sqlSelectCode){
         try {
             Statement stmt = conn.createStatement();
             System.out.println(sqlSelectCode);

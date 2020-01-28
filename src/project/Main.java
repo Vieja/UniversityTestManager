@@ -8,8 +8,10 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import project.classes.Podejscie;
 import project.classes.Pytanie;
 import project.classes.Student;
+import project.classes.Zestaw;
 import project.sql.SQLHandler;
 import project.view.RootController;
 import project.view.SignINController;
@@ -25,6 +27,8 @@ public class Main extends Application {
 
     private volatile ObservableList<Student> students = FXCollections.observableArrayList();
     private volatile ObservableList<Pytanie> pytania = FXCollections.observableArrayList();
+    private volatile ObservableList<Zestaw> zestawy = FXCollections.observableArrayList();
+    private volatile ObservableList<Podejscie> podejscia = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -39,6 +43,7 @@ public class Main extends Application {
             sqlHandler = sql;
             sqlHandler.selectStudenci();
             sqlHandler.selectPytania();
+            sqlHandler.selectZestawy();
             primaryStage.close();
             primaryStage = new Stage();
             primaryStage.setTitle("University Tests Manager");
@@ -80,6 +85,29 @@ public class Main extends Application {
 
     public ObservableList<Pytanie> getObserListPytania() {
         return pytania;
+    }
+
+    public ObservableList<Zestaw> getObserListZestawy() {
+        return zestawy;
+    }
+
+    public ObservableList<Podejscie> getObserListPodejscia() {
+        return podejscia;
+    }
+
+    public ObservableList<Podejscie> getObserListPodejsciaZZestawu(Zestaw zestaw) {
+        podejscia = FXCollections.observableArrayList();
+        sqlHandler.selectPodejscia(zestaw.getId());
+        return podejscia;
+    }
+
+    public ObservableList<Zestaw> getObserListZestawyKtoreSaZDaty(String data) {
+        ObservableList<Zestaw> tmp = FXCollections.observableArrayList();
+        String[] dane = data.split("-");
+        for (Zestaw zestaw : zestawy) {
+            if (zestaw.getData().equals(dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0")) tmp.add(zestaw);
+        }
+        return tmp;
     }
 
     public static void main(String[] args) {
@@ -215,7 +243,7 @@ public class Main extends Application {
     }
 
     public List<Integer> sqlSelect(String sqlSelectCode) {
-        return sqlHandler.searchWhere(sqlSelectCode);
+        return sqlHandler.selectIntegers(sqlSelectCode);
     }
 
     public List<String> selectDatyEgzaminow() {return sqlHandler.selectStringList("select distinct to_char(data_egz, 'DD-MM-YYYY day') from zestawy"); }
