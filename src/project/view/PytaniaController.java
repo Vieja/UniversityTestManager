@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import project.Main;
 import project.classes.Pytanie;
-import project.classes.Student;
 
 import java.util.List;
 
@@ -21,8 +20,8 @@ public class PytaniaController extends TabController {
     public TextField punktyField1;
     public ChoiceBox<String> pytanieChoiceBox;
     public TextField searchBarPytanie;
-    public ChoiceBox dateChoiceBox;
-    public ChoiceBox zestawChoiceBox;
+    public ChoiceBox<String> dateChoiceBox;
+    public ChoiceBox<String> zestawChoiceBox;
     private Main main;
 
     public SplitPane split1;
@@ -132,16 +131,18 @@ public class PytaniaController extends TabController {
         }
 
         if(!searchText.isEmpty()) {
-            List<Integer> results = main.sqlSelect("SELECT ID_ZAD FROM ZADANIA " +
+            List<Integer> results = main.selectIntegers("SELECT ID_ZAD FROM ZADANIA " +
                     "WHERE lower(" + attr + ") like lower('%" + searchText + "%')");
             ObservableList<Pytanie> toShow = FXCollections.observableArrayList();
-            for(Pytanie pytanie : main.getObserListPytania()) {
-                for(Integer index : results) {
-                    if(index == pytanie.getId()) {
+            for(Integer index : results) {
+                for(Pytanie pytanie : main.getObserListPytania()) {
+                    if (index == pytanie.getId()) {
                         toShow.add(pytanie);
+                        break;
                     }
                 }
             }
+
             TablePytanie.getSelectionModel().clearSelection();
             TablePytanie.setItems(toShow);
         }
@@ -151,7 +152,18 @@ public class PytaniaController extends TabController {
         TablePytanie.setItems(main.getObserListPytania());
     }
 
-    public void dodajPytDoZes(MouseEvent mouseEvent) {
+    public void dodajPytDoZes() {
+        String data = dateChoiceBox.getValue();
+        String zestaw = zestawChoiceBox.getValue();
+        main.dodajPytanieDoZestawu(wybrany, data, zestaw);
+    }
+
+
+    public void refreshDataEgzaminu() {
+//        ObservableList<String> datyEgz = FXCollections.observableArrayList();
+//        datyEgz.addAll(main.selectDatyEgzaminow());
+//        dateChoiceBox.setItems(datyEgz);
+
     }
 }
 

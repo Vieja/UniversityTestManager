@@ -6,7 +6,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import project.Main;
 import project.classes.Student;
 
@@ -172,7 +171,7 @@ public class StudenciController extends TabController {
         }
 
         if(!searchText.isEmpty()) {
-            List<Integer> results = main.sqlSelect("SELECT INDEKS FROM STUDENCI " +
+            List<Integer> results = main.selectIntegers("SELECT INDEKS FROM STUDENCI " +
                     "WHERE lower(" + attr + ") like lower('" + searchText + "%')");
             ObservableList<Student> toShow = FXCollections.observableArrayList();
             for(Student worker : main.getObserListStudents()) {

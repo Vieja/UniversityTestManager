@@ -19,7 +19,7 @@
               <AnchorPane fx:id="id_tab2" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
             </content>
           </Tab>
-            <Tab text="Grupy">
+            <Tab text="Zestawy">
                <content>
                   <AnchorPane fx:id="id_tab3" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
@@ -27,11 +27,6 @@
             <Tab text="Baza pytań">
                <content>
                   <AnchorPane fx:id="id_tab4" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </Tab>
-            <Tab text="N/A">
-               <content>
-                  <AnchorPane fx:id="id_tab5" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                </content>
             </Tab>
         </tabs>

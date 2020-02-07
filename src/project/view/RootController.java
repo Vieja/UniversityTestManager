@@ -17,8 +17,6 @@ public class RootController {
     private AnchorPane id_tab3;
     @FXML
     private AnchorPane id_tab4;
-    @FXML
-    private AnchorPane id_tab5;
 
     private Main main;
 
@@ -34,8 +32,6 @@ public class RootController {
         }
         TabController cont=loader.getController();
         cont.setApp(main);
-        //cont.setEkonomia(main.getEkonomia());
-        //cont.setTable();
     }
 
     public void setMain(Main main) {
@@ -43,6 +39,7 @@ public class RootController {
         initTab(id_tab1, "Studenci.fxml");
         initTab(id_tab4, "Pytania.fxml");
         initTab(id_tab2, "Wyniki.fxml");
+        initTab(id_tab3, "Zestawy.fxml");
 
     }
 }

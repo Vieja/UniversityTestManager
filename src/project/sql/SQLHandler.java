@@ -89,13 +89,29 @@ public class SQLHandler {
     }
 
     public Exception selectZestawy() {
-        ResultSet rsZestaw = selectALL("zestawy");
+        Statement stmt;
+        ResultSet rsZestaw = null;
+        try {
+            stmt = conn.createStatement();
+            rsZestaw = stmt.executeQuery("select zes.id_zes, zes.nazwa, zes.data_egz, zes.termin, \n" +
+                                        "(       select SUM(zad.punkty)\n" +
+                                        "        from zawartosc zaw, zadania zad\n" +
+                                        "        where zaw.id_zes = zes.id_zes\n" +
+                                        "        and zaw.id_zad = zad.id_zad\n" +
+                                        "        group by zes.nazwa\n" +
+                                        ") as suma \n" +
+                                        "from zestawy zes");
+            stmt.close();
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute SELECT query.");
+        }
         main.getObserListZestawy().removeAll();
         try{
             while (rsZestaw.next()) {
                 Zestaw zestaw = new Zestaw(
                         rsZestaw.getInt(1), rsZestaw.getString(2),
-                        rsZestaw.getString(3), rsZestaw.getString(4));
+                        rsZestaw.getString(3), rsZestaw.getString(4),
+                        rsZestaw.getFloat(5));
                 main.getObserListZestawy().add(zestaw);
             }
         } catch (Exception exception) {
@@ -191,7 +207,6 @@ public class SQLHandler {
             List<Integer> results = new ArrayList<>();
             while (resultSet.next()) {
                 results.add(resultSet.getInt(1));
-//                System.out.println(results.get(results.size() - 1));
             }
             return results;
         } catch (SQLException exception) {
@@ -223,21 +238,68 @@ public class SQLHandler {
         }
     }
 
-    public int getID(String zadania_sequence) {
+    public int getID(String sequence) {
         try {
             Statement stmt = conn.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT current_value FROM sys.sequences WHERE name = '"+zadania_sequence+"'");
+            ResultSet resultSet = stmt.executeQuery("SELECT "+sequence+".currval S FROM dual");
             resultSet.next();
             int result = resultSet.getInt(1);
             return result;
         } catch (SQLException exception) {
             String title = "SQLException";
-            String content = "Couldn't execute SELECT DISTINCT DATA_EGZ query.\n" +
+            String content = "Couldn't execute SELECT sequence query.\n" +
                     "Error Code: " + exception.getErrorCode() + "\n" +
                     "SQLState: " + exception.getSQLState();
             System.out.println(content);
             return -1;
         }
+    }
+
+    public Exception selectPytania(int id_zes) {
+        Statement stmt;
+        ResultSet rs = null;
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("select zad.id_zad, zad.tresc, zad.punkty from zawartosc zaw, zadania zad "+
+                    "where zaw.id_zad = zad.id_zad and zaw.id_zes = "+id_zes);
+            stmt.close();
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute SELECT query.");
+        }
+        try{
+            while (rs.next()) {
+                Pytanie pytanie = new Pytanie(rs.getInt(1),rs.getString(2),
+                        rs.getFloat(3));
+                main.getObserListPytania().add(pytanie);
+            }
+        } catch (Exception exception) {
+            return exception;
+        }
+        return null;
+    }
+
+    public float selectLiczbaPunktowZestawu(int id) {
+        Statement stmt;
+        ResultSet rs = null;
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("select SUM(zad.punkty)\n" +
+                    "from zawartosc zaw, zadania zad, zestawy zes\n" +
+                    "where zaw.id_zes = zes.id_zes\n" +
+                    "and zaw.id_zad = zad.id_zad\n" +
+                    "and zes.id_zes = " + id + "\n" +
+                    "group by zes.nazwa");
+            stmt.close();
+            float odp = 0;
+            while (rs.next()) {
+                odp = rs.getFloat(1);
+                return odp;
+            }
+            return odp;
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute SELECT query.");
+        }
+        return -1;
     }
 }
 

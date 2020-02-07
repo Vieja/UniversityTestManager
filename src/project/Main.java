@@ -17,6 +17,7 @@ import project.view.RootController;
 import project.view.SignINController;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 public class Main extends Application {
@@ -105,6 +106,7 @@ public class Main extends Application {
         ObservableList<Zestaw> tmp = FXCollections.observableArrayList();
         String[] dane = data.split("-");
         for (Zestaw zestaw : zestawy) {
+            System.out.println("helo there");
             if (zestaw.getData().equals(dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0")) tmp.add(zestaw);
         }
         return tmp;
@@ -194,7 +196,7 @@ public class Main extends Application {
         }
         switch (error) {
             case 0:
-                int id_pyt = sqlHandler.getID("zadania_sequence")+1;
+                int id_pyt = sqlHandler.getID("zadania_sequence");
                 Pytanie pyt = new Pytanie(id_pyt, tresc, punkciki);
                 getObserListPytania().add(pyt);
                 break;
@@ -238,11 +240,11 @@ public class Main extends Application {
         boolean czy = getObserListPytania().contains(wybrany);
         if (czy) {
             getObserListPytania().remove(wybrany);
-            sqlHandler.deleteFrom("DELETE FROM ZADANIA WHERE ID = " + wybrany.getId());
+            sqlHandler.deleteFrom("DELETE FROM ZADANIA WHERE ID_ZAD = " + wybrany.getId());
         } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
     }
 
-    public List<Integer> sqlSelect(String sqlSelectCode) {
+    public List<Integer> selectIntegers(String sqlSelectCode) {
         return sqlHandler.selectIntegers(sqlSelectCode);
     }
 
@@ -287,13 +289,113 @@ public class Main extends Application {
         } else showError("Błąd usuwania","Nie wybrałeś żadnego studenta");
     }
 
-    public void dodajPodejscieDoBazy(Student wybrany, String data, String zestaw) {
+    public void dodajPodejscieDoBazy(Student student, String data, String zestaw) {
         data = data.split(" ")[0];
-        String[] dane = data.split("-");
-        data = dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0";
         String nazwa = zestaw.split(" ")[0];
-        System.out.println(data);
-        System.out.println(nazwa);
-        // TODO dokończyć
+        String indeks = String.valueOf(student.getIndeks());
+        List<Integer> list_id_zes = sqlHandler.selectIntegers("select distinct p.id_zes\n" +
+                "from podejscia p, zestawy z\n" +
+                "where p.id_zes = z.id_zes\n" +
+                "and z.data_egz = to_date('" + data + "', 'DD-MM-YYYY')\n" +
+                "and z.nazwa = '" + nazwa + "'");
+        int error;
+        try {
+            String id_zes = String.valueOf(list_id_zes.get(0));
+            error = sqlHandler.insertInto("INSERT INTO PODEJSCIA (INDEKS, ID_ZES) VALUES (" + indeks + ", " + id_zes + ")");
+        } catch (NumberFormatException e) {
+            error = -1;
+        }
+        switch (error) {
+            case 0:
+                getObserListStudents().add(student);
+                break;
+            case 2290:
+                showError("Błąd dodawania","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                break;
+            case 1:
+                showError("Błąd dodawania","Student już został przydzielony do tego podejścia");
+                break;
+            case 12899:
+                showError("Błąd dodawania","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                break;
+            case -1:
+                showError("Błąd dodawania","Indeks musi być liczbą");
+                break;
+
+        }
+    }
+
+    public ObservableList getObserListPytaniaZZestawu(Zestaw zestaw) {
+        pytania = FXCollections.observableArrayList();
+        sqlHandler.selectPytania(zestaw.getId());
+        return pytania;
+    }
+
+    public void usunZawartosc(Pytanie wybranePytanie, Zestaw wybranyZestaw) {
+        boolean czy = getObserListPytania().contains(wybranePytanie);
+        if (czy) {
+            getObserListPytania().remove(wybranePytanie);
+            String id_zad = String.valueOf(wybranePytanie.getId());
+            String id_zes = String.valueOf(wybranyZestaw.getId());
+            sqlHandler.deleteFrom("DELETE FROM ZAWARTOSC WHERE ID_ZES = " + id_zes + " AND ID_ZAD = " + id_zad);
+        } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
+    }
+
+    public void updateObserbableListZestawLiczbaPunktow(Zestaw wybranyZestaw) {
+        float nowe;
+        zestawy.remove(wybranyZestaw);
+        nowe = sqlHandler.selectLiczbaPunktowZestawu(wybranyZestaw.getId());
+        if (nowe != -1)  {
+            wybranyZestaw.setLiczbaPunktow(nowe);
+        }
+        zestawy.add(wybranyZestaw);
+    }
+
+    public void dodajZestawDoBazy(String data, String nazwa, String termin, String data_wyswietlana) {
+        int error;
+            error = sqlHandler.insertInto("INSERT INTO ZESTAWY (ID_ZES, NAZWA, DATA_EGZ, TERMIN) VALUES (zestawy_sequence.nextval, '"+nazwa+"', to_date('"+data+"','DD-MM-YYYY'), '"+termin+"')");
+        switch (error) {
+            case 0:
+                int id_zes = sqlHandler.getID("zestawy_sequence");
+                Zestaw zes = new Zestaw(id_zes, nazwa, data, termin, 0);
+                if (data_wyswietlana.equals(data)) getObserListZestawy().add(zes);
+                break;
+            case 2290:
+                showError("Błąd dodawania", "Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                break;
+            case 12899:
+                showError("Błąd dodawania","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                break;
+            case 942:
+                showError("Błąd dodawania","Niepoprawna wartość punktów");
+                break;
+        }
+    }
+
+    public void dodajPytanieDoZestawu(Pytanie pytanie, String data, String zestaw) {
+        data = data.split(" ")[0];
+        String nazwa = zestaw.split(" ")[0];
+        String indeks = String.valueOf(pytanie.getId());
+        List<Integer> list_id_zes = sqlHandler.selectIntegers("select distinct p.id_zes\n" +
+                "from podejscia p, zestawy z\n" +
+                "where p.id_zes = z.id_zes\n" +
+                "and z.data_egz = to_date('" + data + "', 'DD-MM-YYYY')\n" +
+                "and z.nazwa = '" + nazwa + "'");
+        int error;
+        try {
+            String id_zes = String.valueOf(list_id_zes.get(0));
+            error = sqlHandler.insertInto("INSERT INTO ZAWARTOSC (ID_ZAD, ID_ZES) VALUES (" + pytanie.getId() + ", " + id_zes + ")");
+        } catch (NumberFormatException e) {
+            error = -1;
+        }
+        switch (error) {
+            case 2290:
+                showError("Błąd dodawania","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                break;
+            case 1:
+                showError("Błąd dodawania","Zadanie znajduje się już w danym zestawie");
+                break;
+
+        }
     }
 }
