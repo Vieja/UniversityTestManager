@@ -101,7 +101,6 @@ public class SQLHandler {
                                         "        group by zes.nazwa\n" +
                                         ") as suma \n" +
                                         "from zestawy zes");
-            stmt.close();
         } catch (SQLException exception) {
             System.out.println("Couldn't execute SELECT query.");
         }
@@ -115,6 +114,7 @@ public class SQLHandler {
                 main.getObserListZestawy().add(zestaw);
             }
         } catch (Exception exception) {
+            System.out.println(exception);
             return exception;
         }
         return null;
@@ -262,7 +262,6 @@ public class SQLHandler {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("select zad.id_zad, zad.tresc, zad.punkty from zawartosc zaw, zadania zad "+
                     "where zaw.id_zad = zad.id_zad and zaw.id_zes = "+id_zes);
-            stmt.close();
         } catch (SQLException exception) {
             System.out.println("Couldn't execute SELECT query.");
         }
@@ -289,7 +288,6 @@ public class SQLHandler {
                     "and zaw.id_zad = zad.id_zad\n" +
                     "and zes.id_zes = " + id + "\n" +
                     "group by zes.nazwa");
-            stmt.close();
             float odp = 0;
             while (rs.next()) {
                 odp = rs.getFloat(1);

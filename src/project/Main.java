@@ -106,7 +106,6 @@ public class Main extends Application {
         ObservableList<Zestaw> tmp = FXCollections.observableArrayList();
         String[] dane = data.split("-");
         for (Zestaw zestaw : zestawy) {
-            System.out.println("helo there");
             if (zestaw.getData().equals(dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0")) tmp.add(zestaw);
         }
         return tmp;

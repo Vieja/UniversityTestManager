@@ -22,7 +22,7 @@ public class WynikiController extends TabController{
 
     public TableView<Zestaw> TableZestaw;
     public TableView<Podejscie> TableStudent;
-    public ChoiceBox<String> dateChoiceBox;
+    public ChoiceBox dateChoiceBox;
     public TableColumn<Zestaw, String> ColumnZestawNazwa;
     public TableColumn<Zestaw, String> ColumnZestawTermin;
     public TableColumn<Podejscie, String> ColumnStudentIndeks;
