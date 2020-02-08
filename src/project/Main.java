@@ -247,17 +247,16 @@ public class Main extends Application {
         return sqlHandler.selectIntegers(sqlSelectCode);
     }
 
-    public List<String> selectDatyEgzaminow() {return sqlHandler.selectStringList("select distinct to_char(data_egz, 'DD-MM-YYYY day') from zestawy"); }
+    public List<String> selectDatyEgzaminow() {return sqlHandler.selectStringList("select distinct to_char(data_egz, 'DD-MM-YYYY day') as egzamin from zestawy order by egzamin"); }
+
     public List<String> selectZestawyZDaty(String data) {return sqlHandler.selectStringList(
             "select nazwa || ' - ' || termin || ' termin' from zestawy where data_egz = to_date('"+data+"', 'DD-MM-YYYY day')" ); }
 
     public void showError(String title, String content) {
-
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
         alert.setHeaderText(content);
         alert.showAndWait();
-
     }
 
     public void zmienOcenePodejscia(Podejscie wybrany, String oc1) {
@@ -292,11 +291,10 @@ public class Main extends Application {
         data = data.split(" ")[0];
         String nazwa = zestaw.split(" ")[0];
         String indeks = String.valueOf(student.getIndeks());
-        List<Integer> list_id_zes = sqlHandler.selectIntegers("select distinct p.id_zes\n" +
-                "from podejscia p, zestawy z\n" +
-                "where p.id_zes = z.id_zes\n" +
-                "and z.data_egz = to_date('" + data + "', 'DD-MM-YYYY')\n" +
-                "and z.nazwa = '" + nazwa + "'");
+        List<Integer> list_id_zes = sqlHandler.selectIntegers("select distinct id_zes\n" +
+                "from zestawy\n" +
+                "where data_egz = to_date('" + data + "', 'DD-MM-YYYY')\n" +
+                "and nazwa = '" + nazwa + "'");
         int error;
         try {
             String id_zes = String.valueOf(list_id_zes.get(0));
@@ -352,12 +350,13 @@ public class Main extends Application {
 
     public void dodajZestawDoBazy(String data, String nazwa, String termin, String data_wyswietlana) {
         int error;
-            error = sqlHandler.insertInto("INSERT INTO ZESTAWY (ID_ZES, NAZWA, DATA_EGZ, TERMIN) VALUES (zestawy_sequence.nextval, '"+nazwa+"', to_date('"+data+"','DD-MM-YYYY'), '"+termin+"')");
+            error = sqlHandler.insertInto("INSERT INTO ZESTAWY VALUES (zestawy_sequence.nextval, '"+nazwa+"', to_date('"+data+"','DD-MM-YYYY'), '"+termin+"')");
         switch (error) {
             case 0:
                 int id_zes = sqlHandler.getID("zestawy_sequence");
-                Zestaw zes = new Zestaw(id_zes, nazwa, data, termin, 0);
-                if (data_wyswietlana.equals(data)) getObserListZestawy().add(zes);
+                String[] dane = data.split("-");
+                Zestaw zes = new Zestaw(id_zes, nazwa, dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0", termin, 0);
+                zestawy.add(zes);
                 break;
             case 2290:
                 showError("Błąd dodawania", "Naruszono więzy integralności. Sprawdź wprowadzone dane.");
@@ -375,11 +374,10 @@ public class Main extends Application {
         data = data.split(" ")[0];
         String nazwa = zestaw.split(" ")[0];
         String indeks = String.valueOf(pytanie.getId());
-        List<Integer> list_id_zes = sqlHandler.selectIntegers("select distinct p.id_zes\n" +
-                "from podejscia p, zestawy z\n" +
-                "where p.id_zes = z.id_zes\n" +
-                "and z.data_egz = to_date('" + data + "', 'DD-MM-YYYY')\n" +
-                "and z.nazwa = '" + nazwa + "'");
+        List<Integer> list_id_zes = sqlHandler.selectIntegers("select distinct id_zes\n" +
+                "from zestawy\n" +
+                "where data_egz = to_date('" + data + "', 'DD-MM-YYYY')\n" +
+                "and nazwa = '" + nazwa + "'");
         int error;
         try {
             String id_zes = String.valueOf(list_id_zes.get(0));
