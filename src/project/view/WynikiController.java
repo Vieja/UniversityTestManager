@@ -119,9 +119,7 @@ public class WynikiController extends TabController{
     @Override
     public void setApp(Main main) {
         this.main = main;
-        ObservableList<String> datyEgz = FXCollections.observableArrayList();
-        datyEgz.addAll(main.selectDatyEgzaminow());
-        dateChoiceBox.setItems(datyEgz);
+        dateChoiceBox.setItems(main.getObserListDatyEgz());
         dateChoiceBox.getSelectionModel().selectFirst();
     }
 }

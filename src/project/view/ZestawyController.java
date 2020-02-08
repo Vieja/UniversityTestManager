@@ -85,9 +85,7 @@ public class ZestawyController extends TabController{
     @Override
     public void setApp(Main main) {
         this.main = main;
-        ObservableList<String> datyEgz = FXCollections.observableArrayList();
-        datyEgz.addAll(main.selectDatyEgzaminow());
-        dateChoiceBox.setItems(datyEgz);
+        dateChoiceBox.setItems(main.getObserListDatyEgz());
 
 
         List<String> list = Arrays.asList("pierwszy", "drugi", "trzeci");

@@ -119,9 +119,7 @@ public class StudenciController extends TabController {
         studentChoiceBox.setItems(studentAttributes);
         studentChoiceBox.getSelectionModel().selectFirst();
 
-        ObservableList<String> datyEgz = FXCollections.observableArrayList();
-        datyEgz.addAll(main.selectDatyEgzaminow());
-        dateChoiceBox.setItems(datyEgz);
+        dateChoiceBox.setItems(main.getObserListDatyEgz());
         dateChoiceBox.getSelectionModel().selectFirst();
         zestawChoiceBox.getSelectionModel().selectFirst();
     }

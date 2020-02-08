@@ -30,6 +30,7 @@ public class Main extends Application {
     private volatile ObservableList<Pytanie> pytania = FXCollections.observableArrayList();
     private volatile ObservableList<Zestaw> zestawy = FXCollections.observableArrayList();
     private volatile ObservableList<Podejscie> podejscia = FXCollections.observableArrayList();
+    private volatile ObservableList<String> datyEgz = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -45,6 +46,7 @@ public class Main extends Application {
             sqlHandler.selectStudenci();
             sqlHandler.selectPytania();
             sqlHandler.selectZestawy();
+            selectDatyEgzaminow();
             primaryStage.close();
             primaryStage = new Stage();
             primaryStage.setTitle("University Tests Manager");
@@ -110,6 +112,8 @@ public class Main extends Application {
         }
         return tmp;
     }
+
+    public ObservableList<String> getObserListDatyEgz() {return datyEgz;};
 
     public static void main(String[] args) {
         launch(args);
@@ -247,7 +251,10 @@ public class Main extends Application {
         return sqlHandler.selectIntegers(sqlSelectCode);
     }
 
-    public List<String> selectDatyEgzaminow() {return sqlHandler.selectStringList("select distinct to_char(data_egz, 'DD-MM-YYYY day') as egzamin from zestawy order by egzamin"); }
+    public void selectDatyEgzaminow() {
+        datyEgz.clear();
+        datyEgz.addAll(sqlHandler.selectStringList("select distinct to_char(data_egz, 'DD-MM-YYYY day') as egzamin from zestawy order by egzamin"));
+    }
 
     public List<String> selectZestawyZDaty(String data) {return sqlHandler.selectStringList(
             "select nazwa || ' - ' || termin || ' termin' from zestawy where data_egz = to_date('"+data+"', 'DD-MM-YYYY day')" ); }
@@ -357,6 +364,7 @@ public class Main extends Application {
                 String[] dane = data.split("-");
                 Zestaw zes = new Zestaw(id_zes, nazwa, dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0", termin, 0);
                 zestawy.add(zes);
+                selectDatyEgzaminow();
                 break;
             case 2290:
                 showError("Błąd dodawania", "Naruszono więzy integralności. Sprawdź wprowadzone dane.");

@@ -91,9 +91,7 @@ public class PytaniaController extends TabController {
         pytanieChoiceBox.setItems(pytaniaAttributes);
         pytanieChoiceBox.getSelectionModel().selectFirst();
 
-        ObservableList<String> datyEgz = FXCollections.observableArrayList();
-        datyEgz.addAll(main.selectDatyEgzaminow());
-        dateChoiceBox.setItems(datyEgz);
+        dateChoiceBox.setItems(main.getObserListDatyEgz());
     }
 
     public void dodajPyt() {
