@@ -185,7 +185,15 @@ public class Main extends Application {
             getObserListStudents().remove(wybrany);
             sqlHandler.deleteFrom("DELETE FROM STUDENCI WHERE INDEKS = " + wybrany.getIndeks());
         } else showError("Błąd usuwania","Nie wybrałeś żadnego studenta");
+    }
 
+    public void usunZestawZBazy(Zestaw wybrany) {
+        boolean czy = zestawy.contains(wybrany);
+        if (czy) {
+            zestawy.remove(wybrany);
+            sqlHandler.deleteFrom("DELETE FROM ZESTAWY WHERE ID_ZES = " + wybrany.getId());
+            selectDatyEgzaminow();
+        } else showError("Błąd usuwania","Nie wybrałeś żadnego zestawu");
     }
 
     public void dodajPytanieDoBazy(String tresc, String punkty) {
@@ -240,11 +248,11 @@ public class Main extends Application {
     }
 
     public void usunPytanieZBazy(Pytanie wybrany) {
-        boolean czy = getObserListPytania().contains(wybrany);
-        if (czy) {
+       boolean czy = pytania.contains(wybrany);
+       if (czy) {
             getObserListPytania().remove(wybrany);
             sqlHandler.deleteFrom("DELETE FROM ZADANIA WHERE ID_ZAD = " + wybrany.getId());
-        } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
+       } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
     }
 
     public List<Integer> selectIntegers(String sqlSelectCode) {
@@ -310,9 +318,6 @@ public class Main extends Application {
             error = -1;
         }
         switch (error) {
-            case 0:
-                getObserListStudents().add(student);
-                break;
             case 2290:
                 showError("Błąd dodawania","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
                 break;
@@ -336,7 +341,7 @@ public class Main extends Application {
     }
 
     public void usunZawartosc(Pytanie wybranePytanie, Zestaw wybranyZestaw) {
-        boolean czy = getObserListPytania().contains(wybranePytanie);
+        boolean czy = pytania.contains(wybranePytanie);
         if (czy) {
             getObserListPytania().remove(wybranePytanie);
             String id_zad = String.valueOf(wybranePytanie.getId());
@@ -355,7 +360,7 @@ public class Main extends Application {
         zestawy.add(wybranyZestaw);
     }
 
-    public void dodajZestawDoBazy(String data, String nazwa, String termin, String data_wyswietlana) {
+    public void dodajZestawDoBazy(String data, String nazwa, String termin) {
         int error;
             error = sqlHandler.insertInto("INSERT INTO ZESTAWY VALUES (zestawy_sequence.nextval, '"+nazwa+"', to_date('"+data+"','DD-MM-YYYY'), '"+termin+"')");
         switch (error) {
@@ -402,5 +407,9 @@ public class Main extends Application {
                 break;
 
         }
+    }
+
+    public void zaktualizujOcene(String termin) {
+
     }
 }

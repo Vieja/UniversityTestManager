@@ -59,9 +59,15 @@ public class WynikiController extends TabController{
         dateChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
-                String data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
-                data = data.split(" ")[0];
-                TableZestaw.setItems(main.getObserListZestawyKtoreSaZDaty(data));
+                String data;
+                if (!newvalue.equals(-1)) {
+                    data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
+                    data = data.split(" ")[0];
+                    TableZestaw.setItems(main.getObserListZestawyKtoreSaZDaty(data));
+                } else {
+                    TableZestaw.setItems(null);
+                    TableStudent.setItems(null);
+                }
             }
         });
 
@@ -102,7 +108,8 @@ public class WynikiController extends TabController{
         wybrany = pod;
     }
 
-    public void zaktualizujOceny(MouseEvent mouseEvent) {
+    public void zaktualizujOceny() {
+
     }
 
     public void zapiszOcene() {

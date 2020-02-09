@@ -165,7 +165,7 @@
                                           <Font size="20.0" />
                                        </font>
                                     </Label>
-                                    <ChoiceBox fx:id="dateChoiceBox" onMouseMoved="#refreshDataEgzaminu" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <ChoiceBox fx:id="dateChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                                     <ChoiceBox fx:id="zestawChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                                  </children>
                               </GridPane>

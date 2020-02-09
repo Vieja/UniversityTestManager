@@ -107,6 +107,7 @@ public class PytaniaController extends TabController {
 
     public void usunPyt(){
         main.usunPytanieZBazy(wybrany);
+        reloadPytania();
     }
 
     public void searchPytanie() {
@@ -151,17 +152,16 @@ public class PytaniaController extends TabController {
     }
 
     public void dodajPytDoZes() {
-        String data = dateChoiceBox.getValue();
-        String zestaw = zestawChoiceBox.getValue();
-        main.dodajPytanieDoZestawu(wybrany, data, zestaw);
+        if (zestawChoiceBox.getSelectionModel().isEmpty() || dateChoiceBox.getSelectionModel().isEmpty()) {
+            main.showError("Błąd dodawania pytania do zestawu", "Upewnij się, że wybrałeś datę oraz nazwę odpowiedniego zestawu.");
+        } else if (wybrany==null) {
+            main.showError("Błąd dodawania pytania do zestawu", "Nie wybrano pytania");
+        } else {
+            String data = dateChoiceBox.getValue();
+            String zestaw = zestawChoiceBox.getValue();
+            main.dodajPytanieDoZestawu(wybrany, data, zestaw);
+        }
     }
 
-
-    public void refreshDataEgzaminu() {
-//        ObservableList<String> datyEgz = FXCollections.observableArrayList();
-//        datyEgz.addAll(main.selectDatyEgzaminow());
-//        dateChoiceBox.setItems(datyEgz);
-
-    }
 }
 

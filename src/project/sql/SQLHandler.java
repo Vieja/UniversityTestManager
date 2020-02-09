@@ -15,6 +15,7 @@ public class SQLHandler {
 
     private Main main;
     private Connection conn;
+    private Statement stmt;
 
     public SQLHandler(Main main) {
         this.main = main;
@@ -44,7 +45,6 @@ public class SQLHandler {
     }
 
     private ResultSet selectALL(String relation){
-        Statement stmt;
         ResultSet rs = null;
         try {
             stmt = conn.createStatement();
@@ -67,6 +67,12 @@ public class SQLHandler {
             }
         } catch (Exception exception) {
             return exception;
+        } finally {
+            if (rsPytanie != null) {
+                try {
+                    rsPytanie.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
         }
         return null;
     }
@@ -84,12 +90,17 @@ public class SQLHandler {
             }
         } catch (Exception exception) {
             return exception;
+        } finally {
+            if (rsStudent != null) {
+                try {
+                    rsStudent.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
         }
         return null;
     }
 
     public Exception selectZestawy() {
-        Statement stmt;
         ResultSet rsZestaw = null;
         try {
             stmt = conn.createStatement();
@@ -116,12 +127,17 @@ public class SQLHandler {
         } catch (Exception exception) {
             System.out.println(exception);
             return exception;
+        } finally {
+            if (rsZestaw != null) {
+                try {
+                    rsZestaw.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
         }
         return null;
     }
 
     public Exception selectPodejscia(int id_zes) {
-        Statement stmt;
         ResultSet rs = null;
         try {
             stmt = conn.createStatement();
@@ -139,12 +155,17 @@ public class SQLHandler {
             }
         } catch (Exception exception) {
             return exception;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
         }
         return null;
     }
 
     public int insertInto (String request){
-        Statement stmt;
         int rows;
         try {
             stmt = conn.createStatement();
@@ -164,7 +185,6 @@ public class SQLHandler {
     }
 
     public void deleteFrom (String request){
-        Statement stmt;
         int rows;
         try {
             stmt = conn.createStatement();
@@ -181,7 +201,6 @@ public class SQLHandler {
     }
 
     public int updateWhere (String request){
-        Statement stmt;
         int rows;
         try {
             stmt = conn.createStatement();
@@ -200,13 +219,14 @@ public class SQLHandler {
     }
 
     public List<Integer> selectIntegers(String sqlSelectCode){
+        ResultSet rs = null;
         try {
-            Statement stmt = conn.createStatement();
+            stmt = conn.createStatement();
             System.out.println(sqlSelectCode);
-            ResultSet resultSet = stmt.executeQuery(sqlSelectCode);
+            rs = stmt.executeQuery(sqlSelectCode);
             List<Integer> results = new ArrayList<>();
-            while (resultSet.next()) {
-                results.add(resultSet.getInt(1));
+            while (rs.next()) {
+                results.add(rs.getInt(1));
             }
             return results;
         } catch (SQLException exception) {
@@ -216,16 +236,23 @@ public class SQLHandler {
                     "SQLState: " + exception.getSQLState();
             System.out.println(content);
             return null;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
         }
     }
 
     public List<String> selectStringList(String sqlSelectCode) {
+        ResultSet rs = null;
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet resultSet = stmt.executeQuery(sqlSelectCode);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sqlSelectCode);
             List<String> results = new ArrayList<>();
-            while (resultSet.next()) {
-                results.add(resultSet.getString(1));
+            while (rs.next()) {
+                results.add(rs.getString(1));
             }
             return results;
         } catch (SQLException exception) {
@@ -235,15 +262,22 @@ public class SQLHandler {
                     "SQLState: " + exception.getSQLState();
             System.out.println(content);
             return null;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
         }
     }
 
     public int getID(String sequence) {
+        ResultSet rs = null;
         try {
-            Statement stmt = conn.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT "+sequence+".currval S FROM dual");
-            resultSet.next();
-            int result = resultSet.getInt(1);
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT "+sequence+".currval S FROM dual");
+            rs.next();
+            int result = rs.getInt(1);
             return result;
         } catch (SQLException exception) {
             String title = "SQLException";
@@ -252,11 +286,16 @@ public class SQLHandler {
                     "SQLState: " + exception.getSQLState();
             System.out.println(content);
             return -1;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
         }
     }
 
     public Exception selectPytania(int id_zes) {
-        Statement stmt;
         ResultSet rs = null;
         try {
             stmt = conn.createStatement();
@@ -273,12 +312,17 @@ public class SQLHandler {
             }
         } catch (Exception exception) {
             return exception;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
         }
         return null;
     }
 
     public float selectLiczbaPunktowZestawu(int id) {
-        Statement stmt;
         ResultSet rs = null;
         try {
             stmt = conn.createStatement();
@@ -296,8 +340,28 @@ public class SQLHandler {
             return odp;
         } catch (SQLException exception) {
             System.out.println("Couldn't execute SELECT query.");
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
         }
+
         return -1;
+    }
+
+    public Exception wprowadzOcenyStudentom1(String data) {
+        try {
+            CallableStatement cstmt = conn.prepareCall("{? = CALL zaktualizuj_ocene1(?)}");
+            cstmt.setString(1, data);
+            cstmt.executeUpdate();
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute procedure.");
+            System.out.println(exception.getErrorCode());
+            return exception;
+        }
+        return null;
     }
 }
 

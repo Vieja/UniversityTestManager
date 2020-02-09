@@ -69,3 +69,37 @@
 -- from podejscia p, zestawy zes, zawartosc zaw
 -- where p.id_zes = zes.id_zes and zes.id_zes = zaw.id_zes
 --     and p.indeks = id_studenta and (current_date - p.data_pod) YEAR TO MONTH < INTERVAL '1-6' YEAR TO MONTH;
+
+
+
+create or replace procedure zaktualizuj_ocene1
+(dataEgz in DATE) is
+begin
+    update studenci s
+    set (s.ocena_1) = (
+        select p.ocena
+        from studenci ss join podejscia p on (ss.indeks = p.indeks)
+        where s.indeks = ss.indeks)
+    where s.indeks in (
+        select ss.indeks
+        from studenci ss, podejscia p, zestawy z
+        where ss.indeks = p.indeks and z.id_zes = p.id_zes and
+                z.data_egz = dataEgz and z.termin = 'pierwszy');
+
+    update studenci s
+    set (s.ocena_2) = (
+        select p.ocena
+        from studenci ss join podejscia p on (ss.indeks = p.indeks)
+        where s.indeks = ss.indeks)
+    where s.indeks in (
+        select ss.indeks
+        from studenci ss, podejscia p, zestawy z
+        where ss.indeks = p.indeks and z.id_zes = p.id_zes and
+                z.data_egz = dataEgz and z.termin != 'pierwszy');
+end zaktualizuj_ocene1;
+
+begin
+    zaktualizuj_ocene1(to_date('04-02-2020','DD-MM-YYYY'));
+    commit;
+    --usun_tych_co_zdali();
+end;

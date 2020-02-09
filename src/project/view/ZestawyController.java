@@ -49,9 +49,15 @@ public class ZestawyController extends TabController{
         dateChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
-                String data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
-                data = data.split(" ")[0];
-                TableZestaw.setItems(main.getObserListZestawyKtoreSaZDaty(data));
+                String data;
+                if (!newvalue.equals(-1)) {
+                    data = dateChoiceBox.getItems().get((Integer) newvalue);
+                    data = data.split(" ")[0];
+                    TableZestaw.setItems(main.getObserListZestawyKtoreSaZDaty(data));
+                } else {
+                    TableZestaw.setItems(null);
+                    TablePytanie.setItems(null);
+                }
             }
         });
 
@@ -99,9 +105,7 @@ public class ZestawyController extends TabController{
     public void stworzZestaw() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String formattedString = datePicker.getValue().format(formatter);
-        String data = dateChoiceBox.getValue();
-        data = data.split(" ")[0];
-        main.dodajZestawDoBazy(formattedString, nazwaField.getText(), (String) choiceBoxTermin.getValue(), data);
+        main.dodajZestawDoBazy(formattedString, nazwaField.getText(), (String) choiceBoxTermin.getValue());
     }
 
     public void usunZZestawu() {
@@ -110,5 +114,18 @@ public class ZestawyController extends TabController{
         TableZestaw.refresh();
         TableZestaw.getColumns().get(0).setVisible(false);
         TableZestaw.getColumns().get(0).setVisible(true);
+    }
+
+    public void usunZestaw() {
+        main.usunZestawZBazy(wybranyZestaw);
+        //reloadZestawy();
+    }
+
+    public void reloadZestawy() {
+        if (!dateChoiceBox.getSelectionModel().isEmpty()) {
+            String data = dateChoiceBox.getSelectionModel().getSelectedItem();
+            data = data.split(" ")[0];
+            TableZestaw.setItems(main.getObserListZestawyKtoreSaZDaty(data));
+        }
     }
 }

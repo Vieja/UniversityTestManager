@@ -139,6 +139,7 @@ public class StudenciController extends TabController {
 
     public void usunStud() {
         main.usunStudentaZBazy(wybrany);
+        reloadStudenci();
     }
 
     public void searchStudent() {
@@ -189,8 +190,14 @@ public class StudenciController extends TabController {
     }
 
     public void dodajStudDoPod() {
-        String data = dateChoiceBox.getValue();
-        String zestaw = zestawChoiceBox.getValue();
-        main.dodajPodejscieDoBazy(wybrany, data, zestaw);
+        if (zestawChoiceBox.getSelectionModel().isEmpty() || dateChoiceBox.getSelectionModel().isEmpty()) {
+            main.showError("Błąd dodawania studenta do podejścia", "Upewnij się, że wybrałeś datę oraz nazwę odpowiedniego podejścia.");
+        } else if (wybrany==null) {
+            main.showError("Błąd dodawania studenta do podejścia", "Nie wybrano studenta");
+        } else {
+            String data = dateChoiceBox.getValue();
+            String zestaw = zestawChoiceBox.getValue();
+            main.dodajPodejscieDoBazy(wybrany, data, zestaw);
+        }
     }
 }
