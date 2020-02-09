@@ -57,7 +57,7 @@ public class SQLHandler {
 
     public Exception selectPytania() {
         ResultSet rsPytanie = selectALL("zadania");
-        main.getObserListPytania().removeAll();
+        main.getObserListPytania().clear();
         try{
             while (rsPytanie.next()) {
                 Pytanie pytanie = new Pytanie(
@@ -79,7 +79,7 @@ public class SQLHandler {
 
     public Exception selectStudenci() {
         ResultSet rsStudent = selectALL("studenci");
-        main.getObserListStudents().removeAll();
+        main.getObserListStudents().clear();
         try{
             while (rsStudent.next()) {
                 Student student = new Student(
@@ -115,7 +115,7 @@ public class SQLHandler {
         } catch (SQLException exception) {
             System.out.println("Couldn't execute SELECT query.");
         }
-        main.getObserListZestawy().removeAll();
+        main.getObserListZestawy().clear();
         try{
             while (rsZestaw.next()) {
                 Zestaw zestaw = new Zestaw(
@@ -351,11 +351,41 @@ public class SQLHandler {
         return -1;
     }
 
-    public Exception wprowadzOcenyStudentom1(String data) {
+    public Exception wprowadzOcenyStudentom1(String data, String nazwa) {
         try {
-            CallableStatement cstmt = conn.prepareCall("{? = CALL zaktualizuj_ocene1(?)}");
-            cstmt.setString(1, data);
+            CallableStatement cstmt = conn.prepareCall("{CALL zaktualizuj_ocene1(?,?)}");
+            cstmt.setTimestamp(1, Timestamp.valueOf(data));
+            cstmt.setString(2, nazwa);
             cstmt.executeUpdate();
+            cstmt.close();
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute procedure.");
+            System.out.println(exception.getErrorCode());
+            return exception;
+        }
+        return null;
+    }
+
+    public Exception wprowadzOcenyStudentom2(String data, String nazwa) {
+        try {
+            CallableStatement cstmt = conn.prepareCall("{CALL zaktualizuj_ocene2(?,?)}");
+            cstmt.setTimestamp(1, Timestamp.valueOf(data));
+            cstmt.setString(2, nazwa);
+            cstmt.executeUpdate();
+            cstmt.close();
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute procedure.");
+            System.out.println(exception.getErrorCode());
+            return exception;
+        }
+        return null;
+    }
+
+    public Exception usunTychCoZdali() {
+        try {
+            CallableStatement cstmt = conn.prepareCall("{CALL usun_tych_co_zdali}");
+            cstmt.execute();
+            cstmt.close();
         } catch (SQLException exception) {
             System.out.println("Couldn't execute procedure.");
             System.out.println(exception.getErrorCode());

@@ -6,6 +6,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import project.Main;
 import project.classes.Student;
 
@@ -186,7 +187,9 @@ public class StudenciController extends TabController {
     }
 
     public void reloadStudenci() {
+        TableStudent.setVisible(false);
         TableStudent.setItems(main.getObserListStudents());
+        TableStudent.setVisible(true);
     }
 
     public void dodajStudDoPod() {
@@ -199,5 +202,12 @@ public class StudenciController extends TabController {
             String zestaw = zestawChoiceBox.getValue();
             main.dodajPodejscieDoBazy(wybrany, data, zestaw);
         }
+    }
+
+    public void usunStudentowCoZdali() {
+        main.usunZaliczonychZBazy();
+    }
+
+    public void resetSpadochroniarzy(MouseEvent mouseEvent) {
     }
 }

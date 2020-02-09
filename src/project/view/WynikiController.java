@@ -37,6 +37,7 @@ public class WynikiController extends TabController{
     public SplitPane split2;
 
     public Podejscie wybrany = null;
+    public Zestaw wybranyZestaw = null;
 
     @FXML
     private void initialize() {
@@ -75,6 +76,7 @@ public class WynikiController extends TabController{
                 ((observable, oldValue, newValue) -> {
                     if(newValue != null) {
                         TableStudent.setItems(main.getObserListPodejsciaZZestawu(newValue));
+                        wybranyZestaw = newValue;
                     }
                 })
         );
@@ -109,7 +111,12 @@ public class WynikiController extends TabController{
     }
 
     public void zaktualizujOceny() {
-
+        if (wybrany!=null) {
+            String data = (String) dateChoiceBox.getValue();
+            data = data.split(" ")[0];
+            String[] dane = data.split("-");
+            main.zaktualizujOcene(dane[2] + "-" + dane[1] + "-" + dane[0] + " 00:00:00.0", wybranyZestaw);
+        }
     }
 
     public void zapiszOcene() {

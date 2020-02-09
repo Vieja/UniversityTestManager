@@ -409,7 +409,17 @@ public class Main extends Application {
         }
     }
 
-    public void zaktualizujOcene(String termin) {
+    public void zaktualizujOcene(String data, Zestaw zestaw) {
+        if (zestaw.getTermin().equals("pierwszy")) {
+            sqlHandler.wprowadzOcenyStudentom1(data, zestaw.getNazwa());
+        } else sqlHandler.wprowadzOcenyStudentom2(data, zestaw.getNazwa());
+        students.clear();
+        sqlHandler.selectStudenci();
+    }
 
+    public void usunZaliczonychZBazy() {
+        sqlHandler.usunTychCoZdali();
+        students.clear();
+        sqlHandler.selectStudenci();
     }
 }

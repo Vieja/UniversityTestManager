@@ -6,7 +6,7 @@ DROP TABLE ZAWARTOSC cascade constraints;
 DROP SEQUENCE zestawy_sequence;
 DROP SEQUENCE zadania_sequence;
 
-CREATE OR REPLACE SEQUENCE zestawy_sequence START WITH 1;
+CREATE SEQUENCE zestawy_sequence START WITH 1;
 CREATE SEQUENCE zadania_sequence START WITH 1;
 
 CREATE TABLE STUDENCI

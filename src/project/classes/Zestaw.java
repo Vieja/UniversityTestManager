@@ -34,6 +34,8 @@ public class Zestaw {
         return nazwa;
     }
 
+    public String getTermin() {return termin;}
+
     public void setNazwa(String nazwa) {
         this.nazwa = nazwa;
     }

@@ -72,34 +72,41 @@
 
 
 
-create or replace procedure zaktualizuj_ocene1
-(dataEgz in DATE) is
-begin
-    update studenci s
-    set (s.ocena_1) = (
-        select p.ocena
-        from studenci ss join podejscia p on (ss.indeks = p.indeks)
-        where s.indeks = ss.indeks)
-    where s.indeks in (
-        select ss.indeks
-        from studenci ss, podejscia p, zestawy z
-        where ss.indeks = p.indeks and z.id_zes = p.id_zes and
-                z.data_egz = dataEgz and z.termin = 'pierwszy');
-
-    update studenci s
-    set (s.ocena_2) = (
-        select p.ocena
-        from studenci ss join podejscia p on (ss.indeks = p.indeks)
-        where s.indeks = ss.indeks)
-    where s.indeks in (
-        select ss.indeks
-        from studenci ss, podejscia p, zestawy z
-        where ss.indeks = p.indeks and z.id_zes = p.id_zes and
-                z.data_egz = dataEgz and z.termin != 'pierwszy');
-end zaktualizuj_ocene1;
-
-begin
-    zaktualizuj_ocene1(to_date('04-02-2020','DD-MM-YYYY'));
-    commit;
-    --usun_tych_co_zdali();
-end;
+-- create or replace procedure zaktualizuj_ocene1
+-- (dataEgz in DATE, nazwaEgz in VARCHAR2) is
+-- begin
+--     update studenci s
+--     set (s.ocena_1) = (
+--         select p.ocena
+--         from studenci ss join podejscia p on (ss.indeks = p.indeks)
+--         where s.indeks = ss.indeks and
+--                 p.id_zes = (select zz.id_zes from zestawy zz where zz.data_egz = dataEgz and zz.nazwa = nazwaEgz))
+--     where s.indeks in (
+--         select ss.indeks
+--         from studenci ss, podejscia p, zestawy z
+--         where ss.indeks = p.indeks and z.id_zes = p.id_zes and
+--                 z.data_egz = dataEgz and z.termin = 'pierwszy' and
+--                 z.nazwa = nazwaEgz);
+-- end zaktualizuj_ocene1;
+--
+-- create or replace procedure zaktualizuj_ocene2
+-- (dataEgz in DATE, nazwaEgz in VARCHAR2) is
+-- begin
+--     update studenci s
+--     set (s.ocena_2) = (
+--         select p.ocena
+--         from studenci ss join podejscia p on (ss.indeks = p.indeks)
+--         where s.indeks = ss.indeks and
+--                 p.id_zes = (select zz.id_zes from zestawy zz where zz.data_egz = dataEgz and zz.nazwa = nazwaEgz))
+--     where s.indeks in (
+--         select ss.indeks
+--         from studenci ss, podejscia p, zestawy z
+--         where ss.indeks = p.indeks and z.id_zes = p.id_zes and
+--                 z.data_egz = dataEgz and z.termin != 'pierwszy' and
+--                 z.nazwa = nazwaEgz);
+-- end zaktualizuj_ocene2;
+--
+-- begin
+--     zaktualizuj_ocene(to_date('09-02-2020','DD-MM-YYYY'),'bb');
+--     commit;
+-- end;
