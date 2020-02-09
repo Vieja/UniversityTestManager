@@ -274,6 +274,13 @@ public class Main extends Application {
         alert.showAndWait();
     }
 
+    public void showInfo(String title, String content) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(content);
+        alert.showAndWait();
+    }
+
     public void zmienOcenePodejscia(Podejscie wybrany, String oc1) {
         String id = String.valueOf(wybrany.getStudentIndeks());
         String id_zes = String.valueOf(wybrany.getId_zes());
@@ -418,8 +425,31 @@ public class Main extends Application {
     }
 
     public void usunZaliczonychZBazy() {
+        int ilu = students.size();
         sqlHandler.usunTychCoZdali();
         students.clear();
         sqlHandler.selectStudenci();
+        ilu = ilu - students.size();
+        if (ilu > 0)
+            showInfo("Powodzenie","Usunięto "+ilu+" studentów.");
+    }
+
+    public void czyscOcenySpadochroniarzom() {
+        int ilu = 0;
+        for(Student student : students) {
+            if(student.getOcena_2()!=null)
+                if (student.getOcena_2().equals("2.0")) ilu++;
+        }
+        sqlHandler.czyscOceny();
+        students.clear();
+        sqlHandler.selectStudenci();
+        int ilu2 = 0;
+        for(Student student : students) {
+            if(student.getOcena_2()!=null)
+                if (student.getOcena_2().equals("2.0")) ilu2++;
+        }
+        ilu=ilu-ilu2;
+        if (ilu!=0)
+            showInfo("Powodzenie","Zresetowano oceny "+ilu+" studentom");
     }
 }

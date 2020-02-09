@@ -39,6 +39,13 @@
 -- end usun_tych_co_zdali;
 -- /
 
+-- create or replace procedure czysc_oceny_powtarzajacym is
+-- begin
+--     update studenci
+--     set ocena_1 = null, ocena_2 = null
+--     where (ocena_1='2.0' and ocena_2='2.0') or (ocena_1 = null and ocena_2='2.0');
+-- end czysc_oceny_powtarzajacym;
+
 --CREATE OR REPLACE FUNCTION ilePunktowMaZestaw
 --    (idZes IN NATURAL)
 --RETURN NUMBER IS

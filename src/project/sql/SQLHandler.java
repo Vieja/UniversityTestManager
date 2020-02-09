@@ -393,5 +393,18 @@ public class SQLHandler {
         }
         return null;
     }
+
+    public Exception czyscOceny() {
+        try {
+            CallableStatement cstmt = conn.prepareCall("{CALL czysc_oceny_powtarzajacym}");
+            cstmt.executeUpdate();
+            cstmt.close();
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute procedure.");
+            System.out.println(exception.getErrorCode());
+            return exception;
+        }
+        return null;
+    }
 }
 
