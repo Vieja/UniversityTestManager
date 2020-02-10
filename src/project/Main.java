@@ -212,13 +212,16 @@ public class Main extends Application {
                 getObserListPytania().add(pyt);
                 break;
             case 2290:
-                showError("Błąd dodawania", "Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                showError("Błąd dodawania", "Niepoprawna wartość punktów.");
                 break;
             case 12899:
-                showError("Błąd dodawania","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                showError("Błąd dodawania","Niepoprawna wartość punktów.");
                 break;
             case -1:
-                showError("Błąd dodawania","Niepoprawna wartość punktów");
+                showError("Błąd dodawania","Niepoprawna wartość punktów.");
+                break;
+            case 1400:
+                showError("Błąd dodawania","Treść nie może być pusta.");
                 break;
         }
     }
@@ -451,5 +454,10 @@ public class Main extends Application {
         ilu=ilu-ilu2;
         if (ilu!=0)
             showInfo("Powodzenie","Zresetowano oceny "+ilu+" studentom");
+    }
+
+    public void selectPytania() {
+        pytania.clear();
+        sqlHandler.selectPytania();
     }
 }

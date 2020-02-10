@@ -247,11 +247,6 @@
                         </BorderPane>
                      </content>
                   </TitledPane>
-                <TitledPane animated="false" text="Automatycznie stwórz egzamin dla studentów">
-                  <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-                  </content>
-                </TitledPane>
                   <TitledPane animated="false" text="Koniec semestru">
                     <content>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">

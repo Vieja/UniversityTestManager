@@ -111,6 +111,7 @@ public class PytaniaController extends TabController {
     }
 
     public void searchPytanie() {
+        reloadPytania();
         String attribute = pytanieChoiceBox.getValue();
         String searchText = searchBarPytanie.getText();
 
@@ -148,6 +149,7 @@ public class PytaniaController extends TabController {
     }
 
     public void reloadPytania() {
+        main.selectPytania();
         TablePytanie.setItems(main.getObserListPytania());
     }
 

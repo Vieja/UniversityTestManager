@@ -105,7 +105,11 @@ public class ZestawyController extends TabController{
     public void stworzZestaw() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String formattedString = datePicker.getValue().format(formatter);
-        main.dodajZestawDoBazy(formattedString, nazwaField.getText(), (String) choiceBoxTermin.getValue());
+        String nazwa = nazwaField.getText();
+        if (nazwa.contains(" ")) {
+            main.showError("Błąd dodawania","Nazwa zestawu nie może zawierać spacji.");
+        } else
+            main.dodajZestawDoBazy(formattedString, nazwaField.getText(), (String) choiceBoxTermin.getValue());
     }
 
     public void usunZZestawu() {

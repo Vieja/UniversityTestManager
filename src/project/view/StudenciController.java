@@ -145,6 +145,7 @@ public class StudenciController extends TabController {
     }
 
     public void searchStudent() {
+        reloadStudenci();
         String attribute = studentChoiceBox.getValue();
         String searchText = searchBarStudent.getText();
 
