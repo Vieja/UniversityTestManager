@@ -115,6 +115,7 @@ public class Main extends Application {
 
     public ObservableList<String> getObserListDatyEgz() {return datyEgz;};
 
+
     public static void main(String[] args) {
         launch(args);
     }
@@ -419,6 +420,12 @@ public class Main extends Application {
         }
     }
 
+    public String iluStudentowWDacie(String data) {
+        data = data.split(" ")[0];
+        String[] dane = data.split("-");
+        return sqlHandler.iluStudentowPodeszloWBazie(dane[2] + "-" + dane[1] + "-" + dane[0] + " 00:00:00.0");
+    }
+
     public void zaktualizujOcene(String data, Zestaw zestaw) {
         if (zestaw.getTermin().equals("pierwszy")) {
             sqlHandler.wprowadzOcenyStudentom1(data, zestaw.getNazwa());
@@ -460,4 +467,6 @@ public class Main extends Application {
         pytania.clear();
         sqlHandler.selectPytania();
     }
+
+
 }

@@ -29,6 +29,7 @@ public class WynikiController extends TabController{
     public TableColumn<Podejscie, String> ColumnStudentImie;
     public TableColumn<Podejscie, String> ColumnStudentNazwisko;
     public TableColumn<Podejscie, String> ColumnStudentOcena;
+    public TextField iluStudentow;
     public TextField ocenaField;
     public TextField imieField1;
     public TextField nazwiskoField1;
@@ -65,9 +66,11 @@ public class WynikiController extends TabController{
                     data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
                     data = data.split(" ")[0];
                     TableZestaw.setItems(main.getObserListZestawyKtoreSaZDaty(data));
+                    iluStudentow.setText(main.iluStudentowWDacie(data));
                 } else {
                     TableZestaw.setItems(null);
                     TableStudent.setItems(null);
+                    iluStudentow.setText(null);
                 }
             }
         });

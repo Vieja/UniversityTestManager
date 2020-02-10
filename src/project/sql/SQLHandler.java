@@ -406,5 +406,23 @@ public class SQLHandler {
         }
         return null;
     }
+
+    public String iluStudentowPodeszloWBazie(String data) {
+        try {
+            String wynik = null;
+            CallableStatement cstmt = conn.prepareCall("{? = call iluStudentowPodeszloDoEgzaminu(?)}");
+            cstmt.registerOutParameter(1, Types.INTEGER);
+            cstmt.setTimestamp(2, Timestamp.valueOf(data));
+            cstmt.execute();
+            int liczba = cstmt.getInt(1);
+            wynik = String.valueOf(liczba);
+            cstmt.close();
+            return wynik;
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute function.");
+            System.out.println(exception.getErrorCode());
+            return null;
+        }
+    }
 }
 

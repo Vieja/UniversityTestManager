@@ -117,3 +117,15 @@
 --     zaktualizuj_ocene(to_date('09-02-2020','DD-MM-YYYY'),'bb');
 --     commit;
 -- end;
+
+-- CREATE OR REPLACE FUNCTION iluStudentowPodeszloDoEgzaminu
+-- (dataEgz in DATE)
+--     RETURN NUMBER IS
+--     liczba NUMBER;
+-- BEGIN
+--     SELECT COUNT(pod.indeks)
+--     INTO liczba
+--     FROM zestawy zes, podejscia pod
+--     WHERE zes.id_zes = pod.id_zes and zes.data_egz = dataEgz;
+--     RETURN liczba;
+-- END iluStudentowPodeszloDoEgzaminu;
