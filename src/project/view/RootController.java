@@ -37,9 +37,9 @@ public class RootController {
     public void setMain(Main main) {
         this.main=main;
         initTab(id_tab1, "Studenci.fxml");
-        initTab(id_tab4, "Pytania.fxml");
-        initTab(id_tab2, "Wyniki.fxml");
-        initTab(id_tab3, "Zestawy.fxml");
+        //initTab(id_tab4, "Pytania.fxml");
+        //initTab(id_tab2, "Wyniki.fxml");
+        //initTab(id_tab3, "Zestawy.fxml");
 
     }
 }

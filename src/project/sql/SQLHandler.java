@@ -1,10 +1,10 @@
 package project.sql;
 
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import project.Main;
-import project.classes.Podejscie;
-import project.classes.Pytanie;
-import project.classes.Student;
-import project.classes.Zestaw;
+import project.classes.*;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -100,49 +100,75 @@ public class SQLHandler {
         return null;
     }
 
-    public Exception selectZestawy() {
-        ResultSet rsZestaw = null;
-        try {
-            stmt = conn.createStatement();
-            rsZestaw = stmt.executeQuery("select zes.id_zes, zes.nazwa, zes.data_egz, zes.termin, \n" +
-                                        "(       select SUM(zad.punkty)\n" +
-                                        "        from zawartosc zaw, zadania zad\n" +
-                                        "        where zaw.id_zes = zes.id_zes\n" +
-                                        "        and zaw.id_zad = zad.id_zad\n" +
-                                        "        group by zes.nazwa\n" +
-                                        ") as suma \n" +
-                                        "from zestawy zes");
-        } catch (SQLException exception) {
-            System.out.println("Couldn't execute SELECT query.");
-        }
-        main.getObserListZestawy().clear();
+    public Exception selectGrupy() {
+        ResultSet rs = selectALL("grupy");
+        main.getObserListGrupy().clear();
         try{
-            while (rsZestaw.next()) {
-                Zestaw zestaw = new Zestaw(
-                        rsZestaw.getInt(1), rsZestaw.getString(2),
-                        rsZestaw.getString(3), rsZestaw.getString(4),
-                        rsZestaw.getFloat(5));
-                main.getObserListZestawy().add(zestaw);
+            while (rs.next()) {
+                Grupa grupa = new Grupa(
+                        rs.getInt(1), rs.getString(2),
+                        rs.getString(3));
+                main.getObserListGrupy().add(grupa);
             }
         } catch (Exception exception) {
-            System.out.println(exception);
             return exception;
         } finally {
-            if (rsZestaw != null) {
+            if (rs != null) {
                 try {
-                    rsZestaw.close();
+                    rs.close();
                 } catch (SQLException e) { /* kod obsługi */ }
             }
         }
         return null;
     }
 
-    public Exception selectPodejscia(int id_zes) {
+    public Exception selectEgzaminy() {
+        ResultSet rs = selectALL("egzaminy");
+        main.getObserListEgzaminy().clear();
+        try{
+            while (rs.next()) {
+                Egzamin egzamin = new Egzamin(
+                        rs.getString(1), rs.getString(2));
+                        main.getObserListEgzaminy().add(egzamin);
+            }
+        } catch (Exception exception) {
+            return exception;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return null;
+    }
+
+    public Exception selectZestawy() {
+        ResultSet rs = selectALL("zestawy");
+        main.getObserListZestawy().clear();
+        try{
+            while (rs.next()) {
+                Zestaw zestaw = new Zestaw(rs.getString(1));
+                main.getObserListZestawy().add(zestaw);
+            }
+        } catch (Exception exception) {
+            return exception;
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (SQLException e) { /* kod obsługi */ }
+            }
+        }
+        return null;
+    }
+
+    public Exception selectPodejscia(int id) {
         ResultSet rs = null;
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("select p.indeks, p.ocena, s.imie, s.nazwisko "+
-                            "from podejscia p, studenci s where p.indeks = s.indeks and id_zes = "+id_zes);
+                            "from podejscia p, studenci s where p.indeks = s.indeks and id_grupy = "+id);
         } catch (SQLException exception) {
             System.out.println("Couldn't execute SELECT query.");
         }
@@ -150,7 +176,7 @@ public class SQLHandler {
             while (rs.next()) {
                 Student student = new Student(rs.getInt(1),rs.getString(3),
                         rs.getString(4),null,null);
-                Podejscie pod = new Podejscie(student, id_zes, rs.getString(2));
+                Podejscie pod = new Podejscie(student, id, rs.getString(2));
                 main.getObserListPodejscia().add(pod);
             }
         } catch (Exception exception) {
@@ -245,14 +271,16 @@ public class SQLHandler {
         }
     }
 
-    public List<String> selectStringList(String sqlSelectCode) {
+    public ObservableList<String> selectStringList(String sqlSelectCode) {
         ResultSet rs = null;
         try {
+            System.out.println(sqlSelectCode);
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sqlSelectCode);
-            List<String> results = new ArrayList<>();
+            ObservableList<String> results = FXCollections.observableArrayList();
             while (rs.next()) {
-                results.add(rs.getString(1));
+                String nowy = rs.getString(1);
+                results.add(nowy);
             }
             return results;
         } catch (SQLException exception) {
@@ -295,12 +323,12 @@ public class SQLHandler {
         }
     }
 
-    public Exception selectPytania(int id_zes) {
+    public Exception selectPytania(String nazwa) {
         ResultSet rs = null;
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("select zad.id_zad, zad.tresc, zad.punkty from zawartosc zaw, zadania zad "+
-                    "where zaw.id_zad = zad.id_zad and zaw.id_zes = "+id_zes);
+                    "where zaw.id_zad = zad.id_zad and zaw.id_zes = "+nazwa);
         } catch (SQLException exception) {
             System.out.println("Couldn't execute SELECT query.");
         }

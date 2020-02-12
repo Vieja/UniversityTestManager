@@ -1,13 +1,11 @@
 package project.view;
 
-import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import project.Main;
 import project.classes.Student;
 
@@ -27,7 +25,7 @@ public class StudenciController extends TabController {
     public TextField ocena2Field1;
     public ChoiceBox<String> studentChoiceBox;
     public ChoiceBox<String> dateChoiceBox;
-    public ChoiceBox<String> zestawChoiceBox;
+    public ChoiceBox<String> grupaChoiceBox;
     public TextField searchBarStudent;
     private Main main;
 
@@ -67,10 +65,8 @@ public class StudenciController extends TabController {
         dateChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
-                String data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
-                ObservableList<String> zestawy = FXCollections.observableArrayList();
-                zestawy.addAll(main.selectZestawyZDaty(data));
-                zestawChoiceBox.setItems(zestawy);
+                String data = dateChoiceBox.getItems().get((Integer) newvalue);
+                grupaChoiceBox.setItems((ObservableList<String>) main.selectGrupyEgzaminuDoChoiceBoxa(data));
             }
         });
 
@@ -121,9 +117,9 @@ public class StudenciController extends TabController {
         studentChoiceBox.setItems(studentAttributes);
         studentChoiceBox.getSelectionModel().selectFirst();
 
-        dateChoiceBox.setItems(main.getObserListDatyEgz());
+        dateChoiceBox.setItems(main.selectEgzaminyDoChoiceBoxa());
         dateChoiceBox.getSelectionModel().selectFirst();
-        zestawChoiceBox.getSelectionModel().selectFirst();
+        grupaChoiceBox.getSelectionModel().selectFirst();
     }
 
     public void dodajStud() {
@@ -195,22 +191,22 @@ public class StudenciController extends TabController {
     }
 
     public void dodajStudDoPod() {
-        if (zestawChoiceBox.getSelectionModel().isEmpty() || dateChoiceBox.getSelectionModel().isEmpty()) {
+        if (grupaChoiceBox.getSelectionModel().isEmpty() || dateChoiceBox.getSelectionModel().isEmpty()) {
             main.showError("Błąd dodawania studenta do podejścia", "Upewnij się, że wybrałeś datę oraz nazwę odpowiedniego podejścia.");
         } else if (wybrany==null) {
             main.showError("Błąd dodawania studenta do podejścia", "Nie wybrano studenta");
         } else {
             String data = dateChoiceBox.getValue();
-            String zestaw = zestawChoiceBox.getValue();
+            String zestaw = grupaChoiceBox.getValue();
             main.dodajPodejscieDoBazy(wybrany, data, zestaw);
         }
     }
 
     public void usunStudentowCoZdali() {
-        main.usunZaliczonychZBazy();
+       // main.usunZaliczonychZBazy();
     }
 
     public void resetSpadochroniarzy() {
-        main.czyscOcenySpadochroniarzom();
+       // main.czyscOcenySpadochroniarzom();
     }
 }
