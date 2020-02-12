@@ -108,9 +108,11 @@ public class Main extends Application {
 
     public ObservableList<Grupa> getObserListGrupyEgzaminu(String data) {
         sqlHandler.selectGrupy();
+        System.out.println(data);
         ObservableList<Grupa> tmp = FXCollections.observableArrayList();
         String[] dane = data.split("-");
         for (Grupa grupa : grupy) {
+            System.out.println(grupa.getData());
             if (grupa.getData().equals(dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0")) tmp.add(grupa);
         }
         return tmp;
@@ -268,7 +270,6 @@ public class Main extends Application {
     }
 
     public ObservableList<String> selectGrupyEgzaminuDoChoiceBoxa(String data) {
-        System.out.println(data.split(" ")[0]);
         return sqlHandler.selectStringList("select zes_nazwa from grupy where data_egz = to_date('"+data.split(" ")[0]+"', 'DD-MM-YYYY')" );
     }
 

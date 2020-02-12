@@ -274,7 +274,6 @@ public class SQLHandler {
     public ObservableList<String> selectStringList(String sqlSelectCode) {
         ResultSet rs = null;
         try {
-            System.out.println(sqlSelectCode);
             stmt = conn.createStatement();
             rs = stmt.executeQuery(sqlSelectCode);
             ObservableList<String> results = FXCollections.observableArrayList();

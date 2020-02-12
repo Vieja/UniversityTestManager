@@ -11,7 +11,7 @@ public class Grupa {
     private String nazwa;
     private String data;
 
-    public Grupa(int id, String nazwa, String data) {
+    public Grupa(int id, String data, String nazwa) {
         this.id = id;
         this.nazwa = nazwa;
         this.data = data;
