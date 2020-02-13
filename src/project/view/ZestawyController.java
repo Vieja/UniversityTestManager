@@ -25,6 +25,7 @@ public class ZestawyController extends TabController{
     public TableColumn<Zestaw, String> ColumnZestawLiczba;
     public TableView<Pytanie> TablePytanie;
     public TextField nazwaField;
+    public TextField liczbaPunktow;
     public TableColumn<Pytanie, String> ColumnPytanieTresc;
     public TableColumn<Pytanie, String> ColumnPytaniePunkty;
 
@@ -50,6 +51,7 @@ public class ZestawyController extends TabController{
 //                        TableZestaw.getColumns().get(0).setVisible(true);
                         TablePytanie.setItems(main.getObserListPytaniaZZestawu(newValue));
                         wybranyZestaw = newValue;
+                        liczbaPunktow.setText(main.ilePunktowMaZestaw(wybranyZestaw.getNazwa()));
                     }
                 })
         );

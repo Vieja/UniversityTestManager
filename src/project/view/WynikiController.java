@@ -33,6 +33,7 @@ public class WynikiController extends TabController{
     public TextField imieField1;
     public TextField nazwiskoField1;
     public TextField indeksField1;
+    public TextField terminLabel;
     public ChoiceBox<String> zestawChoiceBox;
     public DatePicker datePicker;
     public ChoiceBox<String> terminChoiceBox;
@@ -67,11 +68,13 @@ public class WynikiController extends TabController{
                 if (!newvalue.equals(-1)) {
                     data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
                     TableGrupa.setItems(main.getObserListGrupyEgzaminu(data));
-                    //iluStudentow.setText(main.iluStudentowWDacie(data));
+                    terminLabel.setText(main.selectTerminEgzaminu(data));
+                    iluStudentow.setText(main.iluStudentowWDacie(data));
                 } else {
                     TableGrupa.setItems(null);
                     TableStudent.setItems(null);
-                    //iluStudentow.setText(null);
+                    terminLabel.setText("");
+                    iluStudentow.setText(null);
                 }
             }
         });
@@ -153,6 +156,8 @@ public class WynikiController extends TabController{
             String formattedString = datePicker.getValue().format(formatter);
             String termin = terminChoiceBox.getValue();
             main.dodajEgzaminDoBazy(formattedString, termin);
+            dateChoiceBox.getSelectionModel().clearSelection();
+            dateChoiceBox.setItems(main.selectEgzaminyDoChoiceBoxa());
         }
     }
 
@@ -169,5 +174,14 @@ public class WynikiController extends TabController{
 
     public void usunGrupe() {
         main.usunGrupeZBazy(wybranaGrupa);
+        TableGrupa.setItems(main.getObserListGrupyEgzaminu(dateChoiceBox.getValue()));
+        TableGrupa.setVisible(false);
+        TableGrupa.setVisible(true);
+    }
+
+    public void usunEgzamin() {
+        main.usunEgzaminZBazy(dateChoiceBox.getValue());
+        dateChoiceBox.getSelectionModel().clearSelection();
+        dateChoiceBox.setItems(main.selectEgzaminyDoChoiceBoxa());
     }
 }

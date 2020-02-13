@@ -19,7 +19,7 @@
                <items>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="671.0" prefWidth="163.0">
                      <children>
-                        <TableView fx:id="TableGrupa" layoutX="36.0" layoutY="51.0" prefHeight="625.0" prefWidth="572.0" AnchorPane.bottomAnchor="-5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="51.0">
+                        <TableView fx:id="TableGrupa" layoutX="36.0" layoutY="76.0" prefHeight="411.0" prefWidth="596.0" AnchorPane.bottomAnchor="-5.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="76.0">
                           <columns>
                             <TableColumn fx:id="ColumnGrupaNazwa" prefWidth="585.0" resizable="false" text="Nazwa zestawu" />
                           </columns>
@@ -27,22 +27,36 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <Label layoutX="121.0" layoutY="14.0" text="Data egzaminu">
+                        <Label layoutX="14.0" layoutY="14.0" text="Data egzaminu">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
-                        <ChoiceBox fx:id="dateChoiceBox" layoutX="272.0" layoutY="14.0" prefWidth="150.0" />
-                        <Button layoutX="467.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#usunGrupe" text="Usuń grupę">
+                        <ChoiceBox fx:id="dateChoiceBox" layoutX="138.0" layoutY="14.0" prefWidth="150.0" />
+                        <Button layoutX="468.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#usunEgzamin" text="Usuń egzamin">
                            <font>
                               <Font size="15.0" />
                            </font>
                         </Button>
+                        <Button layoutX="345.0" layoutY="11.0" mnemonicParsing="false" onMouseClicked="#usunGrupe" text="Usuń grupę">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
+                        <TextField fx:id="terminLabel" editable="false" layoutX="138.0" layoutY="42.0" prefHeight="25.0" prefWidth="150.0" />
+                        <Label layoutX="74.0" layoutY="42.0" text="termin">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="230.0" prefWidth="596.0">
                      <children>
-                        <Button layoutX="319.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#zaktualizujOceny" prefHeight="27.0" prefWidth="236.0" text="ZAKTUALIZUJ STUDENTOM OCENY" />
+                        <Button layoutX="307.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#zaktualizujOceny" prefHeight="30.0" prefWidth="246.0" text="ZAKTUALIZUJ STUDENTOM OCENY">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Button>
                         <Label layoutX="385.0" layoutY="60.0" prefHeight="31.0" prefWidth="137.0" text="Stwórz nową grupę">
                            <font>
                               <Font size="16.0" />

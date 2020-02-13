@@ -31,10 +31,9 @@ public class Main extends Application {
     private volatile ObservableList<String> nazwy_zestawu = FXCollections.observableArrayList();
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("University Tests Manager");
         this.primaryStage = primaryStage;
-
         signToDatabase();
     }
 
@@ -356,6 +355,21 @@ public class Main extends Application {
         }
     }
 
+    public void usunEgzaminZBazy(String data) {
+        String[] dane = data.split("-");
+        String tmp = dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0";
+        System.out.println(tmp);
+        for (Egzamin egz : egzaminy) {
+            System.out.println(egz.getData());
+            if (tmp.equals(egz.getData())) {
+                System.out.println("USUWAM");
+                egzaminy.remove(egz);
+                sqlHandler.deleteFrom("DELETE FROM EGZAMINY WHERE DATA_EGZ = to_date('"+data+"','DD-MM-YYYY')");
+                break;
+            }
+        }
+    }
+
     public void usunZawartosc(Pytanie wybranePytanie, Zestaw wybranyZestaw) {
         boolean czy = pytania.contains(wybranePytanie);
         if (czy) {
@@ -451,11 +465,14 @@ public class Main extends Application {
         }
     }
 
-//    public String iluStudentowWDacie(String data) {
-//        data = data.split(" ")[0];
-//        String[] dane = data.split("-");
-//        return sqlHandler.iluStudentowPodeszloWBazie(dane[2] + "-" + dane[1] + "-" + dane[0] + " 00:00:00.0");
-//    }
+    public String iluStudentowWDacie(String data) {
+        String[] dane = data.split("-");
+        return sqlHandler.iluStudentowPodeszloWBazie(dane[2] + "-" + dane[1] + "-" + dane[0] + " 00:00:00.0");
+    }
+
+    public String ilePunktowMaZestaw(String nazwa) {
+        return sqlHandler.ilePunktowMaZestaw(nazwa);
+    }
 
 //    public void zaktualizujOcene(String data, Grupa zestaw) {
 //        if (zestaw.getTermin().equals("pierwszy")) {
@@ -497,5 +514,9 @@ public class Main extends Application {
     public void selectPytania() {
         pytania.clear();
         sqlHandler.selectPytania();
+    }
+
+    public String selectTerminEgzaminu(String data) {
+        return sqlHandler.selectTerminEgzaminu(data);
     }
 }

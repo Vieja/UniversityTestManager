@@ -46,17 +46,17 @@
 --     where (ocena_1='2.0' and ocena_2='2.0') or (ocena_1 = null and ocena_2='2.0');
 -- end czysc_oceny_powtarzajacym;
 
---CREATE OR REPLACE FUNCTION ilePunktowMaZestaw
---    (idZes IN NATURAL)
---RETURN NUMBER IS
---    vPunkty NUMBER;
---BEGIN
--- SELECT SUM(punkty)
--- INTO vPunkty
--- FROM zadania zad, zawartosc zaw
--- WHERE zad.id_zad = zaw.id_zad and zaw.id_zes = idZes;
---RETURN vPunkty;
---END ilePunktowMaZestaw;
+-- CREATE OR REPLACE FUNCTION ilePunktowMaZestaw
+-- (idZes IN VARCHAR2)
+--     RETURN NUMBER IS
+--     vPunkty NUMBER;
+-- BEGIN
+--     SELECT SUM(punkty)
+--     INTO vPunkty
+--     FROM zadania zad, zawartosc zaw
+--     WHERE zad.id_zad = zaw.id_zad and zaw.zes_nazwa = idZes;
+--     RETURN vPunkty;
+-- END ilePunktowMaZestaw;
 --
 --declare
 -- vIle NUMBER;
@@ -125,7 +125,7 @@
 -- BEGIN
 --     SELECT COUNT(pod.indeks)
 --     INTO liczba
---     FROM zestawy zes, podejscia pod
---     WHERE zes.id_zes = pod.id_zes and zes.data_egz = dataEgz;
+--     FROM grupy gr, podejscia pod
+--     WHERE gr.id_grupy = pod.id_grupy and gr.data_egz = dataEgz;
 --     RETURN liczba;
 -- END iluStudentowPodeszloDoEgzaminu;

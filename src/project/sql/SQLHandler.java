@@ -451,6 +451,24 @@ public class SQLHandler {
         }
     }
 
+    public String ilePunktowMaZestaw(String nazwa) {
+        try {
+            String wynik = null;
+            CallableStatement cstmt = conn.prepareCall("{? = call ilePunktowMaZestaw(?)}");
+            cstmt.registerOutParameter(1, Types.FLOAT);
+            cstmt.setString(2, nazwa);
+            cstmt.execute();
+            float liczba = cstmt.getFloat(1);
+            wynik = String.valueOf(liczba);
+            cstmt.close();
+            return wynik;
+        } catch (SQLException exception) {
+            System.out.println("Couldn't execute function.");
+            System.out.println(exception.getErrorCode());
+            return null;
+        }
+    }
+
     public String selectCurrentDate() {
         try {
             String date;
@@ -465,5 +483,18 @@ public class SQLHandler {
         }
     }
 
+    public String selectTerminEgzaminu(String data) {
+        try {
+            String date;
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT termin from egzaminy where data_egz = to_date('"+data+"','DD-MM-YYYY')");
+            rs.next();
+            date = rs.getString(1);
+            return date;
+        } catch (Exception e) {
+            System.out.println("Problem with selecting termin egzaminu");
+            return null;
+        }
+    }
 }
 
