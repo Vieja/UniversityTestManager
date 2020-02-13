@@ -17,8 +17,8 @@
                <children>
                   <TableView fx:id="TableZestaw" layoutX="36.0" layoutY="51.0" prefHeight="545.0" prefWidth="596.0" AnchorPane.bottomAnchor="122.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="51.0">
                     <columns>
-                      <TableColumn fx:id="ColumnZestawNazwa" prefWidth="303.0" resizable="false" text="Nazwa zestawu" />
-                        <TableColumn fx:id="ColumnZestawLiczba" prefWidth="277.0" text="Data utworzenia" />
+                      <TableColumn fx:id="ColumnZestawNazwa" prefWidth="291.0" resizable="false" text="Nazwa zestawu" />
+                        <TableColumn fx:id="ColumnZestawLiczba" prefWidth="315.0" text="Data utworzenia" />
                     </columns>
                      <columnResizePolicy>
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

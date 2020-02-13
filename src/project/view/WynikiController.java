@@ -139,7 +139,7 @@ public class WynikiController extends TabController{
     @Override
     public void setApp(Main main) {
         this.main = main;
-        dateChoiceBox.setItems(main.selectEgzaminyDoChoiceBoxa());
+        dateChoiceBox.setItems(main.getObserListDatyEgzaminu());
         dateChoiceBox.getSelectionModel().selectFirst();
         List<String> list = Arrays.asList("pierwszy", "drugi", "trzeci");
         ObservableList<String> terminy = FXCollections.observableArrayList();
@@ -157,7 +157,7 @@ public class WynikiController extends TabController{
             String termin = terminChoiceBox.getValue();
             main.dodajEgzaminDoBazy(formattedString, termin);
             dateChoiceBox.getSelectionModel().clearSelection();
-            dateChoiceBox.setItems(main.selectEgzaminyDoChoiceBoxa());
+            dateChoiceBox.setItems(main.getObserListDatyEgzaminu());
         }
     }
 
@@ -182,6 +182,6 @@ public class WynikiController extends TabController{
     public void usunEgzamin() {
         main.usunEgzaminZBazy(dateChoiceBox.getValue());
         dateChoiceBox.getSelectionModel().clearSelection();
-        dateChoiceBox.setItems(main.selectEgzaminyDoChoiceBoxa());
+        dateChoiceBox.setItems(main.getObserListDatyEgzaminu());
     }
 }

@@ -117,7 +117,7 @@ public class StudenciController extends TabController {
         studentChoiceBox.setItems(studentAttributes);
         studentChoiceBox.getSelectionModel().selectFirst();
 
-        dateChoiceBox.setItems(main.selectEgzaminyDoChoiceBoxa());
+        dateChoiceBox.setItems(main.getObserListDatyEgzaminu());
         dateChoiceBox.getSelectionModel().selectFirst();
         grupaChoiceBox.getSelectionModel().selectFirst();
     }
@@ -203,10 +203,10 @@ public class StudenciController extends TabController {
     }
 
     public void usunStudentowCoZdali() {
-       // main.usunZaliczonychZBazy();
+       main.usunZaliczonychZBazy();
     }
 
     public void resetSpadochroniarzy() {
-       // main.czyscOcenySpadochroniarzom();
+       main.czyscOcenySpadochroniarzom();
     }
 }

@@ -29,6 +29,7 @@ public class Main extends Application {
     private volatile ObservableList<Podejscie> podejscia = FXCollections.observableArrayList();
     private volatile ObservableList<Egzamin> egzaminy = FXCollections.observableArrayList();
     private volatile ObservableList<String> nazwy_zestawu = FXCollections.observableArrayList();
+    private volatile ObservableList<String> daty_egzaminu = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) {
@@ -45,6 +46,7 @@ public class Main extends Application {
             sqlHandler.selectGrupy();
             sqlHandler.selectEgzaminy();
             sqlHandler.selectZestawy();
+            daty_egzaminu = sqlHandler.selectStringList("select to_char(data_egz, 'DD-MM-YYYY') from egzaminy");
             nazwy_zestawu = sqlHandler.selectStringList("select zes_nazwa from zestawy");
             primaryStage.close();
             primaryStage = new Stage();
@@ -79,6 +81,10 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public ObservableList<String> getObserListDatyEgzaminu() {
+        return daty_egzaminu;
     }
 
     public ObservableList<String> getObserListNazwyZestawu() {
@@ -277,9 +283,6 @@ public class Main extends Application {
         return sqlHandler.selectStringList("select zes_nazwa from grupy where data_egz = to_date('"+data.split(" ")[0]+"', 'DD-MM-YYYY')" );
     }
 
-    public ObservableList<String> selectEgzaminyDoChoiceBoxa() {return sqlHandler.selectStringList(
-            "select to_char(data_egz, 'DD-MM-YYYY') from egzaminy" ); }
-
     public void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -358,12 +361,12 @@ public class Main extends Application {
     public void usunEgzaminZBazy(String data) {
         String[] dane = data.split("-");
         String tmp = dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0";
-        System.out.println(tmp);
         for (Egzamin egz : egzaminy) {
-            System.out.println(egz.getData());
             if (tmp.equals(egz.getData())) {
-                System.out.println("USUWAM");
                 egzaminy.remove(egz);
+                System.out.println(data);
+                System.out.println(daty_egzaminu.get(1));
+                daty_egzaminu.remove(data);
                 sqlHandler.deleteFrom("DELETE FROM EGZAMINY WHERE DATA_EGZ = to_date('"+data+"','DD-MM-YYYY')");
                 break;
             }
@@ -417,6 +420,7 @@ public class Main extends Application {
             case 0:
                 Egzamin egzamin = new Egzamin(data, termin);
                 egzaminy.add(egzamin);
+                daty_egzaminu.add(egzamin.getData());
                 break;
             case 1:
                 showError("Błąd dodawania","Istnieje już egzamin w tym dniu");
@@ -473,7 +477,7 @@ public class Main extends Application {
     public String ilePunktowMaZestaw(String nazwa) {
         return sqlHandler.ilePunktowMaZestaw(nazwa);
     }
-
+//
 //    public void zaktualizujOcene(String data, Grupa zestaw) {
 //        if (zestaw.getTermin().equals("pierwszy")) {
 //            sqlHandler.wprowadzOcenyStudentom1(data, zestaw.getNazwa());
@@ -482,34 +486,34 @@ public class Main extends Application {
 //        sqlHandler.selectStudenci();
 //    }
 
-//    public void usunZaliczonychZBazy() {
-//        int ilu = studenci.size();
-//        sqlHandler.usunTychCoZdali();
-//        studenci.clear();
-//        sqlHandler.selectStudenci();
-//        ilu = ilu - studenci.size();
-//        if (ilu > 0)
-//            showInfo("Powodzenie","Usunięto "+ilu+" studentów.");
-//    }
-//
-//    public void czyscOcenySpadochroniarzom() {
-//        int ilu = 0;
-//        for(Student student : studenci) {
-//            if(student.getOcena_2()!=null)
-//                if (student.getOcena_2().equals("2.0")) ilu++;
-//        }
-//        sqlHandler.czyscOceny();
-//        studenci.clear();
-//        sqlHandler.selectStudenci();
-//        int ilu2 = 0;
-//        for(Student student : studenci) {
-//            if(student.getOcena_2()!=null)
-//                if (student.getOcena_2().equals("2.0")) ilu2++;
-//        }
-//        ilu=ilu-ilu2;
-//        if (ilu!=0)
-//            showInfo("Powodzenie","Zresetowano oceny "+ilu+" studentom");
-//    }
+    public void usunZaliczonychZBazy() {
+        int ilu = studenci.size();
+        sqlHandler.usunTychCoZdali();
+        studenci.clear();
+        sqlHandler.selectStudenci();
+        ilu = ilu - studenci.size();
+        if (ilu > 0)
+            showInfo("Powodzenie","Usunięto "+ilu+" studentów.");
+    }
+
+    public void czyscOcenySpadochroniarzom() {
+        int ilu = 0;
+        for(Student student : studenci) {
+            if(student.getOcena_2()!=null)
+                if (student.getOcena_2().equals("2.0")) ilu++;
+        }
+        sqlHandler.czyscOceny();
+        studenci.clear();
+        sqlHandler.selectStudenci();
+        int ilu2 = 0;
+        for(Student student : studenci) {
+            if(student.getOcena_2()!=null)
+                if (student.getOcena_2().equals("2.0")) ilu2++;
+        }
+        ilu=ilu-ilu2;
+        if (ilu!=0)
+            showInfo("Powodzenie","Zresetowano oceny "+ilu+" studentom");
+    }
 
     public void selectPytania() {
         pytania.clear();
