@@ -53,21 +53,17 @@
                   </AnchorPane>
                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="230.0" prefWidth="596.0">
                      <children>
-                        <Button layoutX="307.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#zaktualizujOceny" prefHeight="30.0" prefWidth="246.0" text="ZAKTUALIZUJ STUDENTOM OCENY">
-                           <font>
-                              <Font size="14.0" />
-                           </font></Button>
                         <Label layoutX="385.0" layoutY="60.0" prefHeight="31.0" prefWidth="137.0" text="Stwórz nową grupę">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </Label>
                         <ChoiceBox fx:id="zestawChoiceBox" layoutX="381.0" layoutY="116.0" prefWidth="174.0" />
-                        <Label layoutX="42.0" layoutY="15.0" text="Łącznie studentów:">
+                        <Label layoutX="129.0" layoutY="16.0" text="Łącznie studentów:">
                            <font>
                               <Font size="17.0" />
                            </font></Label>
-                        <TextField fx:id="iluStudentow" editable="false" layoutX="206.0" layoutY="16.0" prefHeight="25.0" prefWidth="69.0" />
+                        <TextField fx:id="iluStudentow" editable="false" layoutX="291.0" layoutY="17.0" prefHeight="25.0" prefWidth="69.0" />
                         <Button layoutX="96.0" layoutY="179.0" mnemonicParsing="false" onMouseClicked="#stworzEgzamin" prefHeight="31.0" prefWidth="137.0" text="Dodaj">
                            <font>
                               <Font size="15.0" />

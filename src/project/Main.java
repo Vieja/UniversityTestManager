@@ -228,6 +228,9 @@ public class Main extends Application {
                 Pytanie pyt = new Pytanie(id_pyt, tresc, punkciki);
                 getObserListPytania().add(pyt);
                 break;
+            case 1:
+                showError("Błąd dodawania", "Istnieje już pytanie o takiej treści");
+                break;
             case 2290:
                 showError("Błąd dodawania", "Niepoprawna wartość punktów.");
                 break;
@@ -258,11 +261,11 @@ public class Main extends Application {
                 wybrany.setTresc(tresc);
                 wybrany.setPunkty(punkciki);
                 break;
-            case 1438:
-                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
-                break;
             case -1:
-                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                showError("Błąd edycji","Nieprawidłowa liczba punktów");
+                break;
+            case 1407:
+                showError("Błąd edycji", "Treść nie może być pusta");
                 break;
         }
     }
@@ -410,6 +413,8 @@ public class Main extends Application {
             case 942:
                 showError("Błąd dodawania","Niepoprawna wartość punktów");
                 break;
+            case 12899:
+                showError("Błąd dodawania","Zbyt długa nazwa zestawu");
         }
     }
 
