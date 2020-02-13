@@ -80,9 +80,7 @@ public class PytaniaController extends TabController {
         pytanieChoiceBox.setItems(pytaniaAttributes);
         pytanieChoiceBox.getSelectionModel().selectFirst();
 
-        ObservableList<String> tmp = FXCollections.observableArrayList();
-        for (Zestaw zes : main.getObserListZestawy()) tmp.add(zes.getNazwa());
-        zestawChoiceBox.setItems(tmp);
+        zestawChoiceBox.setItems(main.getObserListNazwyZestawu());
     }
 
     public void dodajPyt() {

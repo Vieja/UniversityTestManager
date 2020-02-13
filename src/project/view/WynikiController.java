@@ -2,12 +2,19 @@ package project.view;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import project.Main;
 import project.classes.Podejscie;
 import project.classes.Grupa;
+import project.classes.Zestaw;
+
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
+import java.util.List;
 
 public class WynikiController extends TabController{
 
@@ -131,11 +138,36 @@ public class WynikiController extends TabController{
         this.main = main;
         dateChoiceBox.setItems(main.selectEgzaminyDoChoiceBoxa());
         dateChoiceBox.getSelectionModel().selectFirst();
+        List<String> list = Arrays.asList("pierwszy", "drugi", "trzeci");
+        ObservableList<String> terminy = FXCollections.observableArrayList();
+        terminy.addAll(list);
+        terminChoiceBox.setItems(terminy);
+        zestawChoiceBox.setItems(main.getObserListNazwyZestawu());
     }
 
-    public void stworzEgzamin(MouseEvent mouseEvent) {
+    public void stworzEgzamin() {
+        if (terminChoiceBox.getSelectionModel().isEmpty() || datePicker.getValue() == null)
+            main.showError("Błąd dodawania egzaminu", "Upewnij się, że wybrałeś datę i termin.");
+        else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            String formattedString = datePicker.getValue().format(formatter);
+            String termin = terminChoiceBox.getValue();
+            main.dodajEgzaminDoBazy(formattedString, termin);
+        }
     }
 
-    public void stworzGrupe(MouseEvent mouseEvent) {
+    public void stworzGrupe() {
+        if (zestawChoiceBox.getSelectionModel().isEmpty() || dateChoiceBox.getSelectionModel().isEmpty())
+            main.showError("Błąd tworzenia grupy", "Upewnij się, że wybrałeś nazwę zestawu oraz datę egzaminu dla grupy.");
+        else {
+            main.dodajGrupeDoBazy(dateChoiceBox.getValue(),zestawChoiceBox.getValue());
+            TableGrupa.setItems(main.getObserListGrupyEgzaminu(dateChoiceBox.getValue()));
+            TableGrupa.setVisible(false);
+            TableGrupa.setVisible(true);
+        }
+    }
+
+    public void usunGrupe() {
+        main.usunGrupeZBazy(wybranaGrupa);
     }
 }

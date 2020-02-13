@@ -28,6 +28,7 @@ public class Main extends Application {
     private volatile ObservableList<Zestaw> zestawy = FXCollections.observableArrayList();
     private volatile ObservableList<Podejscie> podejscia = FXCollections.observableArrayList();
     private volatile ObservableList<Egzamin> egzaminy = FXCollections.observableArrayList();
+    private volatile ObservableList<String> nazwy_zestawu = FXCollections.observableArrayList();
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -45,6 +46,7 @@ public class Main extends Application {
             sqlHandler.selectGrupy();
             sqlHandler.selectEgzaminy();
             sqlHandler.selectZestawy();
+            nazwy_zestawu = sqlHandler.selectStringList("select zes_nazwa from zestawy");
             primaryStage.close();
             primaryStage = new Stage();
             primaryStage.setTitle("University Tests Manager");
@@ -78,6 +80,10 @@ public class Main extends Application {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public ObservableList<String> getObserListNazwyZestawu() {
+        return nazwy_zestawu;
     }
 
     public ObservableList<Student> getObserListStudents() {
@@ -197,7 +203,8 @@ public class Main extends Application {
         boolean czy = zestawy.contains(wybrany);
         if (czy) {
             zestawy.remove(wybrany);
-            sqlHandler.deleteFrom("DELETE FROM ZESTAWY WHERE ZES_NAZWA = " + wybrany.getNazwa());
+            nazwy_zestawu.remove(wybrany.getNazwa());
+            sqlHandler.deleteFrom("DELETE FROM ZESTAWY WHERE ZES_NAZWA = '" + wybrany.getNazwa()+"'");
         } else showError("Błąd usuwania","Nie wybrałeś żadnego zestawu");
     }
 
@@ -359,19 +366,29 @@ public class Main extends Application {
         } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
     }
 
+    public void usunGrupeZBazy(Grupa grupa) {
+        boolean czy = grupy.contains(grupa);
+        if (czy) {
+            grupy.remove(grupa);
+            String id = String.valueOf(grupa.getId());
+            sqlHandler.deleteFrom("DELETE FROM GRUPY WHERE ID_GRUPY = "+id);
+        } else showError("Błąd usuwania","Nie wybrałeś żadnej grupy");
+    }
+
     public void dodajZestawDoBazy(String nazwa) {
         int error;
-            error = sqlHandler.insertInto("INSERT INTO ZESTAWY VALUES ('"+nazwa+"')");
+            error = sqlHandler.insertInto("INSERT INTO ZESTAWY (ZES_NAZWA) VALUES ('"+nazwa+"')");
         switch (error) {
             case 0:
-                Zestaw zes = new Zestaw(nazwa);
+                Zestaw zes = new Zestaw(nazwa, sqlHandler.selectCurrentDate());
                 zestawy.add(zes);
+                nazwy_zestawu.add(nazwa);
                 break;
-            case 2290:
-                showError("Błąd dodawania", "Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+            case 1:
+                showError("Błąd dodawania", "Istnieje już zestaw o takiej nazwie");
                 break;
-            case 12899:
-                showError("Błąd dodawania","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+            case 1400:
+                showError("Błąd dodawania","Nazwa zestawu nie może być pusta");
                 break;
             case 942:
                 showError("Błąd dodawania","Niepoprawna wartość punktów");
@@ -379,7 +396,22 @@ public class Main extends Application {
         }
     }
 
-    public void dodajGrupeDoBazy(String data, String nazwa, String termin) {
+    public void dodajEgzaminDoBazy(String data, String termin) {
+        int error;
+        error = sqlHandler.insertInto("INSERT INTO EGZAMINY VALUES (to_date('"+data+"','DD-MM-YYYY'), '"+termin+"')");
+        switch (error) {
+            case 0:
+                Egzamin egzamin = new Egzamin(data, termin);
+                egzaminy.add(egzamin);
+                break;
+            case 1:
+                showError("Błąd dodawania","Istnieje już egzamin w tym dniu");
+                break;
+        }
+
+    }
+
+    public void dodajGrupeDoBazy(String data, String nazwa) {
         int error;
         error = sqlHandler.insertInto("INSERT INTO GRUPY VALUES (grupy_sequence.nextval, to_date('"+data+"','DD-MM-YYYY'), '"+nazwa+"')");
         switch (error) {
@@ -466,6 +498,4 @@ public class Main extends Application {
         pytania.clear();
         sqlHandler.selectPytania();
     }
-
-
 }

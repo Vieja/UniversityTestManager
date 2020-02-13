@@ -44,21 +44,12 @@ public class SQLHandler {
         }
     }
 
-    private ResultSet selectALL(String relation){
-        ResultSet rs = null;
-        try {
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("select * from " + relation);
-        } catch (SQLException exception) {
-            System.out.println("Couldn't execute SELECT query.");
-        }
-        return rs;
-    }
-
     public Exception selectPytania() {
-        ResultSet rsPytanie = selectALL("zadania");
+        ResultSet rsPytanie = null;
         main.getObserListPytania().clear();
         try{
+            stmt = conn.createStatement();
+            rsPytanie = stmt.executeQuery("select * from zadania order by id_zad");
             while (rsPytanie.next()) {
                 Pytanie pytanie = new Pytanie(
                         rsPytanie.getInt(1), rsPytanie.getString(2),
@@ -78,9 +69,11 @@ public class SQLHandler {
     }
 
     public Exception selectStudenci() {
-        ResultSet rsStudent = selectALL("studenci");
+        ResultSet rsStudent = null;
         main.getObserListStudents().clear();
         try{
+            stmt = conn.createStatement();
+            rsStudent = stmt.executeQuery("select * from studenci order by indeks");
             while (rsStudent.next()) {
                 Student student = new Student(
                         rsStudent.getInt(1), rsStudent.getString(2),
@@ -101,9 +94,11 @@ public class SQLHandler {
     }
 
     public Exception selectGrupy() {
-        ResultSet rs = selectALL("grupy");
+        ResultSet rs = null;
         main.getObserListGrupy().clear();
         try{
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("select * from grupy order by zes_nazwa");
             while (rs.next()) {
                 Grupa grupa = new Grupa(
                         rs.getInt(1), rs.getString(2),
@@ -123,9 +118,11 @@ public class SQLHandler {
     }
 
     public Exception selectEgzaminy() {
-        ResultSet rs = selectALL("egzaminy");
+        ResultSet rs = null;
         main.getObserListEgzaminy().clear();
         try{
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("select * from egzaminy order by data_egz");
             while (rs.next()) {
                 Egzamin egzamin = new Egzamin(
                         rs.getString(1), rs.getString(2));
@@ -144,11 +141,13 @@ public class SQLHandler {
     }
 
     public Exception selectZestawy() {
-        ResultSet rs = selectALL("zestawy");
+        ResultSet rs = null;
         main.getObserListZestawy().clear();
         try{
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("select zes_nazwa, to_char(data_utw, 'DD-MM-YYYY') from zestawy order by zes_nazwa");
             while (rs.next()) {
-                Zestaw zestaw = new Zestaw(rs.getString(1));
+                Zestaw zestaw = new Zestaw(rs.getString(1), rs.getString(2));
                 main.getObserListZestawy().add(zestaw);
             }
         } catch (Exception exception) {
@@ -327,7 +326,7 @@ public class SQLHandler {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("select zad.id_zad, zad.tresc, zad.punkty from zawartosc zaw, zadania zad "+
-                    "where zaw.id_zad = zad.id_zad and zaw.id_zes = "+nazwa);
+                    "where zaw.id_zad = zad.id_zad and zaw.zes_nazwa = '"+nazwa+"'");
         } catch (SQLException exception) {
             System.out.println("Couldn't execute SELECT query.");
         }
@@ -451,5 +450,20 @@ public class SQLHandler {
             return null;
         }
     }
+
+    public String selectCurrentDate() {
+        try {
+            String date;
+            stmt = conn.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT TO_CHAR(SYSDATE, 'DD-MM-YYYY') FROM dual");
+            rs.next();
+            date = rs.getString(1);
+            return date;
+        } catch (Exception e) {
+            System.out.println("Problem with selecting current_date");
+            return null;
+        }
+    }
+
 }
 
