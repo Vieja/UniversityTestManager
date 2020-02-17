@@ -215,6 +215,7 @@ public class Main extends Application {
             zestawy.remove(wybrany);
             nazwy_zestawu.remove(wybrany.getNazwa());
             sqlHandler.deleteFrom("DELETE FROM ZESTAWY WHERE ZES_NAZWA = '" + wybrany.getNazwa()+"'");
+            showInfo("Powodzenie","Usunięto zestaw "+wybrany.getNazwa());
         } else showError("Błąd usuwania","Nie wybrałeś żadnego zestawu");
     }
 
@@ -333,10 +334,10 @@ public class Main extends Application {
                 wybrany.setOcena(oc1);
                 break;
             case 2290:
-                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                showError("Błąd edycji","Ocena musi przyjmować jedną z tych wartości: 2.0, 3.0, 3.5, 4.0, 4.5, 5.0");
                 break;
             case 12899:
-                showError("Błąd edycji","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                showError("Błąd edycji","Ocena musi przyjmować jedną z tych wartości: 2.0, 3.0, 3.5, 4.0, 4.5, 5.0");
                 break;
         }
     }
@@ -391,7 +392,7 @@ public class Main extends Application {
                 egzaminy.remove(egz);
                 daty_egzaminu.remove(data);
                 sqlHandler.deleteFrom("DELETE FROM EGZAMINY WHERE DATA_EGZ = to_date('"+data+"','DD-MM-YYYY')");
-                showInfo("Powodzenie","Usunięto egzamin w dniu "+data);
+                showInfo("Powodzenie","Usunięto egzamin z dnia "+data);
                 break;
             }
         }
@@ -467,14 +468,8 @@ public class Main extends Application {
                 Grupa grupa = new Grupa(id, nazwa, dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0");
                 grupy.add(grupa);
                 break;
-            case 2290:
-                showError("Błąd dodawania", "Naruszono więzy integralności. Sprawdź wprowadzone dane.");
-                break;
-            case 12899:
-                showError("Błąd dodawania","Zbyt duża wartość. Sprawdź wsprowadzone dane");
-                break;
-            case 942:
-                showError("Błąd dodawania","Niepoprawna wartość punktów");
+            case 1:
+                showError("Błąd dodawania","Egzamin posiada już grupę korzystającą z danego zestawu");
                 break;
         }
     }
@@ -505,14 +500,23 @@ public class Main extends Application {
     public String ilePunktowMaZestaw(String nazwa) {
         return sqlHandler.ilePunktowMaZestaw(nazwa);
     }
-//
-//    public void zaktualizujOcene(String data, Grupa zestaw) {
-//        if (zestaw.getTermin().equals("pierwszy")) {
-//            sqlHandler.wprowadzOcenyStudentom1(data, zestaw.getNazwa());
-//        } else sqlHandler.wprowadzOcenyStudentom2(data, zestaw.getNazwa());
-//        studenci.clear();
-//        sqlHandler.selectStudenci();
-//    }
+
+    public void zaktualizujOcene(String data, String ilu) {
+        String data2 = data.split(" ")[0];
+        String[] dane = data2.split("-");
+        data2 = dane[2] + "-" + dane[1] + "-" + dane[0] + " 00:00:00.0";
+        String termin = sqlHandler.selectTerminEgzaminu(data);
+        if (termin == null) showError("Niepowodzenie","Nie wybrano egzaminu");
+        else if (termin.equals("pierwszy")) {
+            sqlHandler.wprowadzOcenyStudentom1(data2);
+            showInfo("Powodzenie","Wystawiono Ocene_1 "+ilu+" studentom");
+        } else {
+            sqlHandler.wprowadzOcenyStudentom2(data2);
+            showInfo("Powodzenie","Wystawiono Ocene_2 "+ilu+" studentom");
+        }
+        studenci.clear();
+        sqlHandler.selectStudenci();
+    }
 
     public void usunZaliczonychZBazy() {
         int ilu = studenci.size();

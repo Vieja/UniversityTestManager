@@ -377,11 +377,10 @@ public class SQLHandler {
         return -1;
     }
 
-    public Exception wprowadzOcenyStudentom1(String data, String nazwa) {
+    public Exception wprowadzOcenyStudentom1(String data) {
         try {
-            CallableStatement cstmt = conn.prepareCall("{CALL zaktualizuj_ocene1(?,?)}");
+            CallableStatement cstmt = conn.prepareCall("{CALL zaktualizuj_ocene1(?)}");
             cstmt.setTimestamp(1, Timestamp.valueOf(data));
-            cstmt.setString(2, nazwa);
             cstmt.executeUpdate();
             cstmt.close();
         } catch (SQLException exception) {
@@ -392,11 +391,10 @@ public class SQLHandler {
         return null;
     }
 
-    public Exception wprowadzOcenyStudentom2(String data, String nazwa) {
+    public Exception wprowadzOcenyStudentom2(String data) {
         try {
-            CallableStatement cstmt = conn.prepareCall("{CALL zaktualizuj_ocene2(?,?)}");
+            CallableStatement cstmt = conn.prepareCall("{CALL zaktualizuj_ocene2(?)}");
             cstmt.setTimestamp(1, Timestamp.valueOf(data));
-            cstmt.setString(2, nazwa);
             cstmt.executeUpdate();
             cstmt.close();
         } catch (SQLException exception) {

@@ -96,6 +96,11 @@
                               <Font size="15.0" />
                            </font>
                         </Button>
+                        <Button layoutX="381.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#zaktualizujOceny" text="Wystaw oceny studentom">
+                           <font>
+                              <Font size="15.0" />
+                           </font>
+                        </Button>
                      </children>
                   </AnchorPane>
                </items>

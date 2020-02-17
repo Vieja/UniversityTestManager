@@ -6,15 +6,15 @@
 --     update studenci s
 --     set (s.ocena_1) = (
 --         select p.ocena
---         from studenci ss join podejscia p on (ss.indeks = p.indeks)
---         where s.indeks = ss.indeks)
+--         from studenci ss, podejscia p, grupy g
+--         where s.indeks = ss.indeks and ss.indeks = p.indeks
+--           and p.id_grupy = g.id_grupy and g.data_egz = dataEgz)
 --     where s.indeks in (
---         select ss.indeks
---         from studenci ss, podejscia p, zestawy z
---         where ss.indeks = p.indeks and z.id_zes = p.id_zes and
---                 z.data_egz = dataEgz and z.termin = 'pierwszy');
+--         select sss.indeks
+--         from studenci sss, podejscia pp, grupy gg, egzaminy e
+--         where sss.indeks = pp.indeks and pp.id_grupy = gg.id_grupy
+--           and gg.data_egz = e.data_egz and e.data_egz = dataEgz and e.termin = 'pierwszy');
 -- end zaktualizuj_ocene1;
---
 --
 -- create or replace procedure zaktualizuj_ocene2
 -- (dataEgz in DATE) is
@@ -22,13 +22,14 @@
 --     update studenci s
 --     set (s.ocena_2) = (
 --         select p.ocena
---         from studenci ss join podejscia p on (ss.indeks = p.indeks)
---         where s.indeks = ss.indeks)
+--         from studenci ss, podejscia p, grupy g
+--         where s.indeks = ss.indeks and ss.indeks = p.indeks
+--           and p.id_grupy = g.id_grupy and g.data_egz = dataEgz)
 --     where s.indeks in (
---         select ss.indeks
---         from studenci ss, podejscia p, zestawy z
---         where ss.indeks = p.indeks and z.id_zes = p.id_zes and
---               z.data_egz = dataEgz and z.termin != 'pierwszy');
+--         select sss.indeks
+--         from studenci sss, podejscia pp, grupy gg, egzaminy e
+--         where sss.indeks = pp.indeks and pp.id_grupy = gg.id_grupy
+--             and gg.data_egz = e.data_egz and e.data_egz = dataEgz and (e.termin = 'drugi') or (e.termin = 'trzeci'));
 -- end zaktualizuj_ocene2;
 -- /
 --
@@ -64,10 +65,8 @@
 --vIle := ilePunktowMaZestaw(1);
 --end;
 
-
-
 -- begin
--- --zaktualizuj_ocene1(to_date('15-12-2019','DD-MM-YYYY'));
+-- --zaktualizuj_ocene1(to_date('05-12-2019','DD-MM-YYYY'));
 -- --usun_tych_co_zdali();
 -- end;
 --
@@ -76,47 +75,6 @@
 -- from podejscia p, zestawy zes, zawartosc zaw
 -- where p.id_zes = zes.id_zes and zes.id_zes = zaw.id_zes
 --     and p.indeks = id_studenta and (current_date - p.data_pod) YEAR TO MONTH < INTERVAL '1-6' YEAR TO MONTH;
-
-
-
--- create or replace procedure zaktualizuj_ocene1
--- (dataEgz in DATE, nazwaEgz in VARCHAR2) is
--- begin
---     update studenci s
---     set (s.ocena_1) = (
---         select p.ocena
---         from studenci ss join podejscia p on (ss.indeks = p.indeks)
---         where s.indeks = ss.indeks and
---                 p.id_zes = (select zz.id_zes from zestawy zz where zz.data_egz = dataEgz and zz.nazwa = nazwaEgz))
---     where s.indeks in (
---         select ss.indeks
---         from studenci ss, podejscia p, zestawy z
---         where ss.indeks = p.indeks and z.id_zes = p.id_zes and
---                 z.data_egz = dataEgz and z.termin = 'pierwszy' and
---                 z.nazwa = nazwaEgz);
--- end zaktualizuj_ocene1;
---
--- create or replace procedure zaktualizuj_ocene2
--- (dataEgz in DATE, nazwaEgz in VARCHAR2) is
--- begin
---     update studenci s
---     set (s.ocena_2) = (
---         select p.ocena
---         from studenci ss join podejscia p on (ss.indeks = p.indeks)
---         where s.indeks = ss.indeks and
---                 p.id_zes = (select zz.id_zes from zestawy zz where zz.data_egz = dataEgz and zz.nazwa = nazwaEgz))
---     where s.indeks in (
---         select ss.indeks
---         from studenci ss, podejscia p, zestawy z
---         where ss.indeks = p.indeks and z.id_zes = p.id_zes and
---                 z.data_egz = dataEgz and z.termin != 'pierwszy' and
---                 z.nazwa = nazwaEgz);
--- end zaktualizuj_ocene2;
---
--- begin
---     zaktualizuj_ocene(to_date('09-02-2020','DD-MM-YYYY'),'bb');
---     commit;
--- end;
 
 -- CREATE OR REPLACE FUNCTION iluStudentowPodeszloDoEgzaminu
 -- (dataEgz in DATE)

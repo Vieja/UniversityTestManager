@@ -84,6 +84,7 @@ public class WynikiController extends TabController{
                     if(newValue != null) {
                         TableStudent.setItems(main.getObserListPodejsciaZGrupy(newValue));
                         wybranaGrupa = newValue;
+                        clearStudent();
                     }
                 })
         );
@@ -116,13 +117,17 @@ public class WynikiController extends TabController{
         wybrany = pod;
     }
 
+    private void clearStudent() {
+        indeksField1.setText("");
+        imieField1.setText("");
+        nazwiskoField1.setText("");
+        ocenaField.setText("");
+    }
+
     public void zaktualizujOceny() {
-        if (wybrany!=null) {
-            String data = (String) dateChoiceBox.getValue();
-            data = data.split(" ")[0];
-            String[] dane = data.split("-");
-            //main.zaktualizujOcene(dane[2] + "-" + dane[1] + "-" + dane[0] + " 00:00:00.0", wybranaGrupa);
-        }
+        String data = (String) dateChoiceBox.getValue();
+        if (!data.equals(""))
+            main.zaktualizujOcene(data, iluStudentow.getText());
     }
 
     public void zapiszOcene() {
@@ -174,7 +179,6 @@ public class WynikiController extends TabController{
 
     public void usunGrupe() {
         main.usunGrupeZBazy(wybranaGrupa);
-
         TableGrupa.setItems(main.getObserListGrupyEgzaminu(dateChoiceBox.getValue()));
         TableGrupa.setVisible(false);
         TableGrupa.setVisible(true);
