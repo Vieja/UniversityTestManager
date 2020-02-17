@@ -90,6 +90,7 @@ public class ZestawyController extends TabController{
 
     public void usunZestaw() {
         main.usunZestawZBazy(wybranyZestaw);
+        main.showInfo("Powodzenie","Usunięto zestaw "+wybranyZestaw.getNazwa());
         //reloadZestawy();
     }
 

@@ -92,6 +92,7 @@ public class PytaniaController extends TabController {
         TablePytanie.refresh();
         TablePytanie.getColumns().get(0).setVisible(false);
         TablePytanie.getColumns().get(0).setVisible(true);
+        showPytanie(wybrany);
     }
 
     public void usunPyt(){

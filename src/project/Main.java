@@ -15,6 +15,7 @@ import project.view.SignINController;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 public class Main extends Application {
 
@@ -188,10 +189,13 @@ public class Main extends Application {
                 wybrany.setOcena_2(oc2);
                 break;
             case 2290:
-                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                showError("Błąd edycji","Ocena musi przyjmować jedną z tych wartości: 2.0, 3.0, 3.5, 4.0, 4.5, 5.0");
+                break;
+            case 1407:
+                showError("Błąd edycji","Ani imię ani nazwisko nie mogą być puste");
                 break;
             case 12899:
-                showError("Błąd edycji","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                showError("Błąd edycji","Ocena musi przyjmować jedną z tych wartości: 2.0, 3.0, 3.5, 4.0, 4.5, 5.0");
                 break;
         }
     }
@@ -201,6 +205,7 @@ public class Main extends Application {
         if (czy) {
             getObserListStudents().remove(wybrany);
             sqlHandler.deleteFrom("DELETE FROM STUDENCI WHERE INDEKS = " + wybrany.getIndeks());
+            showInfo("Powodzenie","Usunięto studenta "+wybrany.getImie()+" "+wybrany.getNazwisko());
         } else showError("Błąd usuwania","Nie wybrałeś żadnego studenta");
     }
 
@@ -243,29 +248,44 @@ public class Main extends Application {
             case 1400:
                 showError("Błąd dodawania","Treść nie może być pusta.");
                 break;
+            case 1438:
+                showError("Błąd dodawania","Zbyt duża wartość punktów");
+                break;
         }
     }
 
     public void edytujPytanieWBazie(Pytanie wybrany, String tresc, String punkty) {
         int error;
         float punkciki = 0;
-        try {
+        String pkt = null;
+        if (punkty.equals("")) error = -2;
+        else try {
             String id = String.valueOf(wybrany.getId());
             punkciki = Float.parseFloat(punkty);
-            error = sqlHandler.updateWhere("UPDATE ZADANIA SET TRESC = '" + tresc +"', PUNKTY = " + punkty + " WHERE ID_ZAD = " + id);
+            pkt = String.format(Locale.US, "%.1f", punkciki);
+            error = sqlHandler.updateWhere("UPDATE ZADANIA SET TRESC = '" + tresc +"', PUNKTY = " + pkt + " WHERE ID_ZAD = " + id);
         } catch (NumberFormatException e) {
             error = -1;
         }
         switch (error) {
             case 0:
                 wybrany.setTresc(tresc);
-                wybrany.setPunkty(punkciki);
+                wybrany.setPunkty(Float.parseFloat(pkt));
+                break;
+            case -2:
+                showError("Błąd edycji","Liczba punktów nie może być pusta");
                 break;
             case -1:
-                showError("Błąd edycji","Nieprawidłowa liczba punktów");
+                showError("Błąd edycji","Nieprawidłowa liczba punktów - jeżeli wartość jest niecałkowita, należy ją zapisać z kropką, np 3.5");
                 break;
             case 1407:
                 showError("Błąd edycji", "Treść nie może być pusta");
+                break;
+            case 2290:
+                showError("Błąd edycji","Liczba punktów musi być większa od zera");
+                break;
+            case 1438:
+                showError("Błąd edycji","Zbyt duża wartość punktów");
                 break;
         }
     }
@@ -275,6 +295,7 @@ public class Main extends Application {
        if (czy) {
             getObserListPytania().remove(wybrany);
             sqlHandler.deleteFrom("DELETE FROM ZADANIA WHERE ID_ZAD = " + wybrany.getId());
+            showInfo("Powodzenie","Usunięto pytanie");
        } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
     }
 
@@ -325,6 +346,7 @@ public class Main extends Application {
         if (czy) {
             getObserListPodejscia().remove(wybrany);
             sqlHandler.deleteFrom("DELETE FROM PODEJSCIA WHERE INDEKS = " + wybrany.getStudentIndeks() + " AND ID_GRUPY = " + wybrany.getId_grupy());
+            showInfo("Powodzenie","Usunięto studenta z wybranej grupy");
         } else showError("Błąd usuwania","Nie wybrałeś żadnego studenta");
     }
 
@@ -367,10 +389,9 @@ public class Main extends Application {
         for (Egzamin egz : egzaminy) {
             if (tmp.equals(egz.getData())) {
                 egzaminy.remove(egz);
-                System.out.println(data);
-                System.out.println(daty_egzaminu.get(1));
                 daty_egzaminu.remove(data);
                 sqlHandler.deleteFrom("DELETE FROM EGZAMINY WHERE DATA_EGZ = to_date('"+data+"','DD-MM-YYYY')");
+                showInfo("Powodzenie","Usunięto egzamin w dniu "+data);
                 break;
             }
         }
@@ -383,6 +404,7 @@ public class Main extends Application {
             String id_zad = String.valueOf(wybranePytanie.getId());
             String id_zes = String.valueOf(wybranyZestaw.getNazwa());
             sqlHandler.deleteFrom("DELETE FROM ZAWARTOSC WHERE ZES_NAZWA = " + id_zes + " AND ID_ZAD = " + id_zad);
+            showInfo("Powodzenie","Usunięto pytanie z zestawu "+wybranyZestaw.getNazwa());
         } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
     }
 
@@ -392,6 +414,7 @@ public class Main extends Application {
             grupy.remove(grupa);
             String id = String.valueOf(grupa.getId());
             sqlHandler.deleteFrom("DELETE FROM GRUPY WHERE ID_GRUPY = "+id);
+            showInfo("Powodzenie","Usunięto grupę z zestawem "+grupa.getNazwa());
         } else showError("Błąd usuwania","Nie wybrałeś żadnej grupy");
     }
 

@@ -174,6 +174,7 @@ public class WynikiController extends TabController{
 
     public void usunGrupe() {
         main.usunGrupeZBazy(wybranaGrupa);
+
         TableGrupa.setItems(main.getObserListGrupyEgzaminu(dateChoiceBox.getValue()));
         TableGrupa.setVisible(false);
         TableGrupa.setVisible(true);

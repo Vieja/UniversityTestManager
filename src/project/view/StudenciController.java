@@ -133,6 +133,7 @@ public class StudenciController extends TabController {
         TableStudent.refresh();
         TableStudent.getColumns().get(0).setVisible(false);
         TableStudent.getColumns().get(0).setVisible(true);
+        showStudent(wybrany);
     }
 
     public void usunStud() {
