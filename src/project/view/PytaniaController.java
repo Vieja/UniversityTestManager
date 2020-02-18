@@ -6,9 +6,9 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import project.Main;
 import project.classes.Pytanie;
+import project.classes.Zestaw;
 
 import java.util.List;
 
@@ -20,7 +20,6 @@ public class PytaniaController extends TabController {
     public TextField punktyField1;
     public ChoiceBox<String> pytanieChoiceBox;
     public TextField searchBarPytanie;
-    public ChoiceBox<String> dateChoiceBox;
     public ChoiceBox<String> zestawChoiceBox;
     private Main main;
 
@@ -53,16 +52,6 @@ public class PytaniaController extends TabController {
             }
         });
 
-        dateChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
-                String data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
-                ObservableList<String> zestawy = FXCollections.observableArrayList();
-                zestawy.addAll(main.selectZestawyZDaty(data));
-                zestawChoiceBox.setItems(zestawy);
-            }
-        });
-
         TablePytanie.getSelectionModel().selectedItemProperty().addListener(
                 ((observable, oldValue, newValue) -> {
                     if(newValue != null) {
@@ -91,7 +80,7 @@ public class PytaniaController extends TabController {
         pytanieChoiceBox.setItems(pytaniaAttributes);
         pytanieChoiceBox.getSelectionModel().selectFirst();
 
-        dateChoiceBox.setItems(main.getObserListDatyEgz());
+        zestawChoiceBox.setItems(main.getObserListNazwyZestawu());
     }
 
     public void dodajPyt() {
@@ -103,6 +92,7 @@ public class PytaniaController extends TabController {
         TablePytanie.refresh();
         TablePytanie.getColumns().get(0).setVisible(false);
         TablePytanie.getColumns().get(0).setVisible(true);
+        showPytanie(wybrany);
     }
 
     public void usunPyt(){
@@ -154,14 +144,13 @@ public class PytaniaController extends TabController {
     }
 
     public void dodajPytDoZes() {
-        if (zestawChoiceBox.getSelectionModel().isEmpty() || dateChoiceBox.getSelectionModel().isEmpty()) {
-            main.showError("Błąd dodawania pytania do zestawu", "Upewnij się, że wybrałeś datę oraz nazwę odpowiedniego zestawu.");
+        if (zestawChoiceBox.getSelectionModel().isEmpty() ) {
+            main.showError("Błąd dodawania pytania do zestawu", "Upewnij się, że wybrałeś nazwę odpowiedniego zestawu.");
         } else if (wybrany==null) {
             main.showError("Błąd dodawania pytania do zestawu", "Nie wybrano pytania");
         } else {
-            String data = dateChoiceBox.getValue();
             String zestaw = zestawChoiceBox.getValue();
-            main.dodajPytanieDoZestawu(wybrany, data, zestaw);
+            main.dodajPytanieDoZestawu(wybrany, zestaw);
         }
     }
 

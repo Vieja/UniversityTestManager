@@ -34,7 +34,7 @@
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy>
                         </TableView>
-                        <Label layoutX="327.0" layoutY="2.0" text="Baza pytań">
+                        <Label layoutX="320.0" layoutY="2.0" text="Baza pytań">
                            <font>
                               <Font size="16.0" />
                            </font>
@@ -103,24 +103,19 @@
                 <TitledPane animated="false" text="Dodaj pytanie do zestawu">
                      <content>
                         <BorderPane prefHeight="200.0" prefWidth="200.0">
-                           <bottom>
-                              <AnchorPane prefHeight="163.0" prefWidth="457.0" BorderPane.alignment="CENTER">
-                                 <children>
-                                    <Button layoutX="148.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#dodajPytDoZes" prefHeight="42.0" prefWidth="160.0" text="Dodaj" />
-                                 </children>
-                              </AnchorPane>
-                           </bottom>
                            <top>
-                              <GridPane alignment="CENTER" prefHeight="323.0" prefWidth="457.0" BorderPane.alignment="CENTER">
+                              <GridPane alignment="CENTER" prefHeight="555.0" prefWidth="457.0" BorderPane.alignment="CENTER">
                                  <columnConstraints>
                                     <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="240.0" minWidth="10.0" prefWidth="165.60001220703126" />
-                                    <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="298.3999755859375" minWidth="10.0" prefWidth="281.59998779296876" />
+                                    <ColumnConstraints hgrow="SOMETIMES" maxWidth="298.3999755859375" minWidth="10.0" prefWidth="281.59998779296876" />
                                     <ColumnConstraints hgrow="SOMETIMES" maxWidth="223.20001220703122" minWidth="10.0" prefWidth="10.4000244140625" />
                                  </columnConstraints>
                                  <rowConstraints>
                                     <RowConstraints maxHeight="55.799993896484374" minHeight="10.0" prefHeight="21.399998092651366" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="206.39998779296874" minHeight="10.0" prefHeight="206.39998779296874" valignment="TOP" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="112.79999389648435" minHeight="10.0" prefHeight="88.00001220703123" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="295.0" minHeight="10.0" prefHeight="258.0" valignment="TOP" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="112.79999389648435" minHeight="10.0" prefHeight="97.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="169.0" minHeight="10.0" prefHeight="83.0" vgrow="SOMETIMES" />
+                                    <RowConstraints maxHeight="169.0" minHeight="10.0" prefHeight="101.0" vgrow="SOMETIMES" />
                                  </rowConstraints>
                                  <children>
                                     <Label alignment="CENTER" text="Treść" GridPane.rowIndex="1">
@@ -139,37 +134,16 @@
                                        </font>
                                     </TextField>
                                     <TextArea fx:id="trescField1" editable="false" prefHeight="206.0" prefWidth="298.0" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                                    <Label text="Zestaw" GridPane.rowIndex="3">
+                                       <font>
+                                          <Font size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <ChoiceBox fx:id="zestawChoiceBox" prefHeight="32.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Button mnemonicParsing="false" onMouseClicked="#dodajPytDoZes" prefHeight="42.0" prefWidth="201.0" text="Dodaj" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                                  </children>
                               </GridPane>
                            </top>
-                           <center>
-                              <GridPane prefHeight="146.0" prefWidth="457.0" BorderPane.alignment="CENTER">
-                                <columnConstraints>
-                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="222.4000244140625" minWidth="10.0" prefWidth="182.4000244140625" />
-                                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="273.5999755859375" minWidth="10.0" prefWidth="273.5999755859375" />
-                                </columnConstraints>
-                                <rowConstraints>
-                                    <RowConstraints maxHeight="52.000006103515624" minHeight="8.000005149841307" prefHeight="20.600018310546872" vgrow="SOMETIMES" />
-                                  <RowConstraints maxHeight="108.7999948501587" minHeight="10.0" prefHeight="62.19996337890625" vgrow="SOMETIMES" />
-                                  <RowConstraints maxHeight="88.80000000000001" minHeight="10.0" prefHeight="63.000036621093756" vgrow="SOMETIMES" />
-                                    <RowConstraints maxHeight="81.5999755859375" minHeight="10.0" prefHeight="19.199987792968756" vgrow="SOMETIMES" />
-                                </rowConstraints>
-                                 <children>
-                                    <Label text="Data egzaminu" GridPane.rowIndex="1">
-                                       <font>
-                                          <Font size="20.0" />
-                                       </font>
-                                    </Label>
-                                    <Label text="Zestaw" GridPane.rowIndex="2">
-                                       <font>
-                                          <Font size="20.0" />
-                                       </font>
-                                    </Label>
-                                    <ChoiceBox fx:id="dateChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                                    <ChoiceBox fx:id="zestawChoiceBox" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                                 </children>
-                              </GridPane>
-                           </center>
                         </BorderPane>
                      </content>
                 </TitledPane>

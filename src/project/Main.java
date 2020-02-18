@@ -8,17 +8,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import project.classes.Podejscie;
-import project.classes.Pytanie;
-import project.classes.Student;
-import project.classes.Zestaw;
+import project.classes.*;
 import project.sql.SQLHandler;
 import project.view.RootController;
 import project.view.SignINController;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.List;
+import java.util.Locale;
 
 public class Main extends Application {
 
@@ -26,17 +23,19 @@ public class Main extends Application {
     private BorderPane rootLayout;
     private SQLHandler sqlHandler;
 
-    private volatile ObservableList<Student> students = FXCollections.observableArrayList();
+    private volatile ObservableList<Student> studenci = FXCollections.observableArrayList();
     private volatile ObservableList<Pytanie> pytania = FXCollections.observableArrayList();
+    private volatile ObservableList<Grupa> grupy = FXCollections.observableArrayList();
     private volatile ObservableList<Zestaw> zestawy = FXCollections.observableArrayList();
     private volatile ObservableList<Podejscie> podejscia = FXCollections.observableArrayList();
-    private volatile ObservableList<String> datyEgz = FXCollections.observableArrayList();
+    private volatile ObservableList<Egzamin> egzaminy = FXCollections.observableArrayList();
+    private volatile ObservableList<String> nazwy_zestawu = FXCollections.observableArrayList();
+    private volatile ObservableList<String> daty_egzaminu = FXCollections.observableArrayList();
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) {
         primaryStage.setTitle("University Tests Manager");
         this.primaryStage = primaryStage;
-
         signToDatabase();
     }
 
@@ -45,8 +44,11 @@ public class Main extends Application {
             sqlHandler = sql;
             sqlHandler.selectStudenci();
             sqlHandler.selectPytania();
+            sqlHandler.selectGrupy();
+            sqlHandler.selectEgzaminy();
             sqlHandler.selectZestawy();
-            selectDatyEgzaminow();
+            daty_egzaminu = sqlHandler.selectStringList("select to_char(data_egz, 'DD-MM-YYYY') from egzaminy");
+            nazwy_zestawu = sqlHandler.selectStringList("select zes_nazwa from zestawy");
             primaryStage.close();
             primaryStage = new Stage();
             primaryStage.setTitle("University Tests Manager");
@@ -82,44 +84,59 @@ public class Main extends Application {
         }
     }
 
+    public ObservableList<String> getObserListDatyEgzaminu() {
+        return daty_egzaminu;
+    }
+
+    public ObservableList<String> getObserListNazwyZestawu() {
+        return nazwy_zestawu;
+    }
+
     public ObservableList<Student> getObserListStudents() {
-        return students;
+        return studenci;
     }
 
     public ObservableList<Pytanie> getObserListPytania() {
         return pytania;
     }
 
-    public ObservableList<Zestaw> getObserListZestawy() {
-        return zestawy;
+    public ObservableList<Grupa> getObserListGrupy() {
+        return grupy;
     }
 
     public ObservableList<Podejscie> getObserListPodejscia() {
         return podejscia;
     }
 
-    public ObservableList<Podejscie> getObserListPodejsciaZZestawu(Zestaw zestaw) {
+    public ObservableList<Egzamin> getObserListEgzaminy() {return egzaminy;}
+
+    public ObservableList<Zestaw> getObserListZestawy() {return zestawy;}
+
+    public ObservableList<Podejscie> getObserListPodejsciaZGrupy(Grupa grupa) {
         podejscia = FXCollections.observableArrayList();
-        sqlHandler.selectPodejscia(zestaw.getId());
+        sqlHandler.selectPodejscia(grupa.getId());
         return podejscia;
     }
 
-    public ObservableList<Zestaw> getObserListZestawyKtoreSaZDaty(String data) {
-        ObservableList<Zestaw> tmp = FXCollections.observableArrayList();
+    public ObservableList<Grupa> getObserListGrupyEgzaminu(String data) {
+        sqlHandler.selectGrupy();
+        ObservableList<Grupa> tmp = FXCollections.observableArrayList();
         String[] dane = data.split("-");
-        for (Zestaw zestaw : zestawy) {
-            if (zestaw.getData().equals(dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0")) tmp.add(zestaw);
+        for (Grupa grupa : grupy) {
+            if (grupa.getData().equals(dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0")) tmp.add(grupa);
         }
         return tmp;
     }
 
-    public ObservableList<String> getObserListDatyEgz() {return datyEgz;};
-
+    public ObservableList<Pytanie> getObserListPytaniaZZestawu(Zestaw zestaw) {
+        pytania = FXCollections.observableArrayList();
+        sqlHandler.selectPytania(zestaw.getNazwa());
+        return pytania;
+    }
 
     public static void main(String[] args) {
         launch(args);
     }
-
 
     public void dodajStudentaDoBazy(Student student) {
         int error;
@@ -172,10 +189,13 @@ public class Main extends Application {
                 wybrany.setOcena_2(oc2);
                 break;
             case 2290:
-                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                showError("Błąd edycji","Ocena musi przyjmować jedną z tych wartości: 2.0, 3.0, 3.5, 4.0, 4.5, 5.0");
+                break;
+            case 1407:
+                showError("Błąd edycji","Ani imię ani nazwisko nie mogą być puste");
                 break;
             case 12899:
-                showError("Błąd edycji","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                showError("Błąd edycji","Ocena musi przyjmować jedną z tych wartości: 2.0, 3.0, 3.5, 4.0, 4.5, 5.0");
                 break;
         }
     }
@@ -185,6 +205,7 @@ public class Main extends Application {
         if (czy) {
             getObserListStudents().remove(wybrany);
             sqlHandler.deleteFrom("DELETE FROM STUDENCI WHERE INDEKS = " + wybrany.getIndeks());
+            showInfo("Powodzenie","Usunięto studenta "+wybrany.getImie()+" "+wybrany.getNazwisko());
         } else showError("Błąd usuwania","Nie wybrałeś żadnego studenta");
     }
 
@@ -192,8 +213,9 @@ public class Main extends Application {
         boolean czy = zestawy.contains(wybrany);
         if (czy) {
             zestawy.remove(wybrany);
-            sqlHandler.deleteFrom("DELETE FROM ZESTAWY WHERE ID_ZES = " + wybrany.getId());
-            selectDatyEgzaminow();
+            nazwy_zestawu.remove(wybrany.getNazwa());
+            sqlHandler.deleteFrom("DELETE FROM ZESTAWY WHERE ZES_NAZWA = '" + wybrany.getNazwa()+"'");
+            showInfo("Powodzenie","Usunięto zestaw "+wybrany.getNazwa());
         } else showError("Błąd usuwania","Nie wybrałeś żadnego zestawu");
     }
 
@@ -212,6 +234,9 @@ public class Main extends Application {
                 Pytanie pyt = new Pytanie(id_pyt, tresc, punkciki);
                 getObserListPytania().add(pyt);
                 break;
+            case 1:
+                showError("Błąd dodawania", "Istnieje już pytanie o takiej treści");
+                break;
             case 2290:
                 showError("Błąd dodawania", "Niepoprawna wartość punktów.");
                 break;
@@ -224,29 +249,44 @@ public class Main extends Application {
             case 1400:
                 showError("Błąd dodawania","Treść nie może być pusta.");
                 break;
+            case 1438:
+                showError("Błąd dodawania","Zbyt duża wartość punktów");
+                break;
         }
     }
 
     public void edytujPytanieWBazie(Pytanie wybrany, String tresc, String punkty) {
         int error;
         float punkciki = 0;
-        try {
+        String pkt = null;
+        if (punkty.equals("")) error = -2;
+        else try {
             String id = String.valueOf(wybrany.getId());
             punkciki = Float.parseFloat(punkty);
-            error = sqlHandler.updateWhere("UPDATE ZADANIA SET TRESC = '" + tresc +"', PUNKTY = " + punkty + " WHERE ID_ZAD = " + id);
+            pkt = String.format(Locale.US, "%.1f", punkciki);
+            error = sqlHandler.updateWhere("UPDATE ZADANIA SET TRESC = '" + tresc +"', PUNKTY = " + pkt + " WHERE ID_ZAD = " + id);
         } catch (NumberFormatException e) {
             error = -1;
         }
         switch (error) {
             case 0:
                 wybrany.setTresc(tresc);
-                wybrany.setPunkty(punkciki);
+                wybrany.setPunkty(Float.parseFloat(pkt));
                 break;
-            case 1438:
-                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+            case -2:
+                showError("Błąd edycji","Liczba punktów nie może być pusta");
                 break;
             case -1:
-                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                showError("Błąd edycji","Nieprawidłowa liczba punktów - jeżeli wartość jest niecałkowita, należy ją zapisać z kropką, np 3.5");
+                break;
+            case 1407:
+                showError("Błąd edycji", "Treść nie może być pusta");
+                break;
+            case 2290:
+                showError("Błąd edycji","Liczba punktów musi być większa od zera");
+                break;
+            case 1438:
+                showError("Błąd edycji","Zbyt duża wartość punktów");
                 break;
         }
     }
@@ -256,6 +296,7 @@ public class Main extends Application {
        if (czy) {
             getObserListPytania().remove(wybrany);
             sqlHandler.deleteFrom("DELETE FROM ZADANIA WHERE ID_ZAD = " + wybrany.getId());
+            showInfo("Powodzenie","Usunięto pytanie");
        } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
     }
 
@@ -263,13 +304,9 @@ public class Main extends Application {
         return sqlHandler.selectIntegers(sqlSelectCode);
     }
 
-    public void selectDatyEgzaminow() {
-        datyEgz.clear();
-        datyEgz.addAll(sqlHandler.selectStringList("select distinct to_char(data_egz, 'DD-MM-YYYY day') as egzamin from zestawy order by egzamin"));
+    public ObservableList<String> selectGrupyEgzaminuDoChoiceBoxa(String data) {
+        return sqlHandler.selectStringList("select zes_nazwa from grupy where data_egz = to_date('"+data.split(" ")[0]+"', 'DD-MM-YYYY')" );
     }
-
-    public List<String> selectZestawyZDaty(String data) {return sqlHandler.selectStringList(
-            "select nazwa || ' - ' || termin || ' termin' from zestawy where data_egz = to_date('"+data+"', 'DD-MM-YYYY day')" ); }
 
     public void showError(String title, String content) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -287,20 +324,20 @@ public class Main extends Application {
 
     public void zmienOcenePodejscia(Podejscie wybrany, String oc1) {
         String id = String.valueOf(wybrany.getStudentIndeks());
-        String id_zes = String.valueOf(wybrany.getId_zes());
+        String id_grupy = String.valueOf(wybrany.getId_grupy());
         if (oc1.equals("")) oc1 = null;
         String oc11 = oc1;
         if (oc11 != null) oc11 = "'"+oc11+"'";
-        int error = sqlHandler.updateWhere("UPDATE PODEJSCIA SET OCENA = " + oc11 +" WHERE INDEKS = " + id + " AND ID_ZES = "+id_zes);
+        int error = sqlHandler.updateWhere("UPDATE PODEJSCIA SET OCENA = " + oc11 +" WHERE INDEKS = " + id + " AND ID_GRUPY = "+id_grupy);
         switch (error) {
             case 0:
                 wybrany.setOcena(oc1);
                 break;
             case 2290:
-                showError("Błąd edycji","Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+                showError("Błąd edycji","Ocena musi przyjmować jedną z tych wartości: 2.0, 3.0, 3.5, 4.0, 4.5, 5.0");
                 break;
             case 12899:
-                showError("Błąd edycji","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+                showError("Błąd edycji","Ocena musi przyjmować jedną z tych wartości: 2.0, 3.0, 3.5, 4.0, 4.5, 5.0");
                 break;
         }
     }
@@ -309,7 +346,8 @@ public class Main extends Application {
         boolean czy = getObserListPodejscia().contains(wybrany);
         if (czy) {
             getObserListPodejscia().remove(wybrany);
-            sqlHandler.deleteFrom("DELETE FROM PODEJSCIA WHERE INDEKS = " + wybrany.getStudentIndeks() + " AND ID_ZES = " + wybrany.getId_zes());
+            sqlHandler.deleteFrom("DELETE FROM PODEJSCIA WHERE INDEKS = " + wybrany.getStudentIndeks() + " AND ID_GRUPY = " + wybrany.getId_grupy());
+            showInfo("Powodzenie","Usunięto studenta z wybranej grupy");
         } else showError("Błąd usuwania","Nie wybrałeś żadnego studenta");
     }
 
@@ -317,14 +355,15 @@ public class Main extends Application {
         data = data.split(" ")[0];
         String nazwa = zestaw.split(" ")[0];
         String indeks = String.valueOf(student.getIndeks());
-        List<Integer> list_id_zes = sqlHandler.selectIntegers("select distinct id_zes\n" +
-                "from zestawy\n" +
+        List<Integer> list_id = sqlHandler.selectIntegers(
+                "select id_grupy\n" +
+                "from grupy\n" +
                 "where data_egz = to_date('" + data + "', 'DD-MM-YYYY')\n" +
-                "and nazwa = '" + nazwa + "'");
+                "and zes_nazwa = '" + nazwa + "'");
         int error;
         try {
-            String id_zes = String.valueOf(list_id_zes.get(0));
-            error = sqlHandler.insertInto("INSERT INTO PODEJSCIA (INDEKS, ID_ZES) VALUES (" + indeks + ", " + id_zes + ")");
+            String id_grupy = String.valueOf(list_id.get(0));
+            error = sqlHandler.insertInto("INSERT INTO PODEJSCIA (INDEKS, ID_GRUPY) VALUES (" + indeks + ", " + id_grupy + ")");
         } catch (NumberFormatException e) {
             error = -1;
         }
@@ -345,10 +384,18 @@ public class Main extends Application {
         }
     }
 
-    public ObservableList getObserListPytaniaZZestawu(Zestaw zestaw) {
-        pytania = FXCollections.observableArrayList();
-        sqlHandler.selectPytania(zestaw.getId());
-        return pytania;
+    public void usunEgzaminZBazy(String data) {
+        String[] dane = data.split("-");
+        String tmp = dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0";
+        for (Egzamin egz : egzaminy) {
+            if (tmp.equals(egz.getData())) {
+                egzaminy.remove(egz);
+                daty_egzaminu.remove(data);
+                sqlHandler.deleteFrom("DELETE FROM EGZAMINY WHERE DATA_EGZ = to_date('"+data+"','DD-MM-YYYY')");
+                showInfo("Powodzenie","Usunięto egzamin z dnia "+data);
+                break;
+            }
+        }
     }
 
     public void usunZawartosc(Pytanie wybranePytanie, Zestaw wybranyZestaw) {
@@ -356,56 +403,81 @@ public class Main extends Application {
         if (czy) {
             getObserListPytania().remove(wybranePytanie);
             String id_zad = String.valueOf(wybranePytanie.getId());
-            String id_zes = String.valueOf(wybranyZestaw.getId());
-            sqlHandler.deleteFrom("DELETE FROM ZAWARTOSC WHERE ID_ZES = " + id_zes + " AND ID_ZAD = " + id_zad);
+            String id_zes = String.valueOf(wybranyZestaw.getNazwa());
+            sqlHandler.deleteFrom("DELETE FROM ZAWARTOSC WHERE ZES_NAZWA = " + id_zes + " AND ID_ZAD = " + id_zad);
+            showInfo("Powodzenie","Usunięto pytanie z zestawu "+wybranyZestaw.getNazwa());
         } else showError("Błąd usuwania","Nie wybrałeś żadnego pytania");
     }
 
-    public void updateObserbableListZestawLiczbaPunktow(Zestaw wybranyZestaw) {
-        float nowe;
-        zestawy.remove(wybranyZestaw);
-        nowe = sqlHandler.selectLiczbaPunktowZestawu(wybranyZestaw.getId());
-        if (nowe != -1)  {
-            wybranyZestaw.setLiczbaPunktow(nowe);
-        }
-        zestawy.add(wybranyZestaw);
+    public void usunGrupeZBazy(Grupa grupa) {
+        boolean czy = grupy.contains(grupa);
+        if (czy) {
+            grupy.remove(grupa);
+            String id = String.valueOf(grupa.getId());
+            sqlHandler.deleteFrom("DELETE FROM GRUPY WHERE ID_GRUPY = "+id);
+            showInfo("Powodzenie","Usunięto grupę z zestawem "+grupa.getNazwa());
+        } else showError("Błąd usuwania","Nie wybrałeś żadnej grupy");
     }
 
-    public void dodajZestawDoBazy(String data, String nazwa, String termin) {
+    public void dodajZestawDoBazy(String nazwa) {
         int error;
-            error = sqlHandler.insertInto("INSERT INTO ZESTAWY VALUES (zestawy_sequence.nextval, '"+nazwa+"', to_date('"+data+"','DD-MM-YYYY'), '"+termin+"')");
+            error = sqlHandler.insertInto("INSERT INTO ZESTAWY (ZES_NAZWA) VALUES ('"+nazwa+"')");
         switch (error) {
             case 0:
-                int id_zes = sqlHandler.getID("zestawy_sequence");
-                String[] dane = data.split("-");
-                Zestaw zes = new Zestaw(id_zes, nazwa, dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0", termin, 0);
+                Zestaw zes = new Zestaw(nazwa, sqlHandler.selectCurrentDate());
                 zestawy.add(zes);
-                selectDatyEgzaminow();
+                nazwy_zestawu.add(nazwa);
                 break;
-            case 2290:
-                showError("Błąd dodawania", "Naruszono więzy integralności. Sprawdź wprowadzone dane.");
+            case 1:
+                showError("Błąd dodawania", "Istnieje już zestaw o takiej nazwie");
                 break;
-            case 12899:
-                showError("Błąd dodawania","Zbyt duża wartość. Sprawdź wsprowadzone dane");
+            case 1400:
+                showError("Błąd dodawania","Nazwa zestawu nie może być pusta");
                 break;
             case 942:
                 showError("Błąd dodawania","Niepoprawna wartość punktów");
                 break;
+            case 12899:
+                showError("Błąd dodawania","Zbyt długa nazwa zestawu");
         }
     }
 
-    public void dodajPytanieDoZestawu(Pytanie pytanie, String data, String zestaw) {
-        data = data.split(" ")[0];
-        String nazwa = zestaw.split(" ")[0];
-        String indeks = String.valueOf(pytanie.getId());
-        List<Integer> list_id_zes = sqlHandler.selectIntegers("select distinct id_zes\n" +
-                "from zestawy\n" +
-                "where data_egz = to_date('" + data + "', 'DD-MM-YYYY')\n" +
-                "and nazwa = '" + nazwa + "'");
+    public void dodajEgzaminDoBazy(String data, String termin) {
+        int error;
+        error = sqlHandler.insertInto("INSERT INTO EGZAMINY VALUES (to_date('"+data+"','DD-MM-YYYY'), '"+termin+"')");
+        switch (error) {
+            case 0:
+                Egzamin egzamin = new Egzamin(data, termin);
+                egzaminy.add(egzamin);
+                daty_egzaminu.add(egzamin.getData());
+                break;
+            case 1:
+                showError("Błąd dodawania","Istnieje już egzamin w tym dniu");
+                break;
+        }
+
+    }
+
+    public void dodajGrupeDoBazy(String data, String nazwa) {
+        int error;
+        error = sqlHandler.insertInto("INSERT INTO GRUPY VALUES (grupy_sequence.nextval, to_date('"+data+"','DD-MM-YYYY'), '"+nazwa+"')");
+        switch (error) {
+            case 0:
+                int id = sqlHandler.getID("grupy_sequence");
+                String[] dane = data.split("-");
+                Grupa grupa = new Grupa(id, nazwa, dane[2]+"-"+dane[1]+"-"+dane[0]+" 00:00:00.0");
+                grupy.add(grupa);
+                break;
+            case 1:
+                showError("Błąd dodawania","Egzamin posiada już grupę korzystającą z danego zestawu");
+                break;
+        }
+    }
+
+    public void dodajPytanieDoZestawu(Pytanie pytanie, String zestaw) {
         int error;
         try {
-            String id_zes = String.valueOf(list_id_zes.get(0));
-            error = sqlHandler.insertInto("INSERT INTO ZAWARTOSC (ID_ZAD, ID_ZES) VALUES (" + pytanie.getId() + ", " + id_zes + ")");
+            error = sqlHandler.insertInto("INSERT INTO ZAWARTOSC (ID_ZAD, ZES_NAZWA) VALUES (" + pytanie.getId() + ", '" + zestaw + "')");
         } catch (NumberFormatException e) {
             error = -1;
         }
@@ -421,40 +493,52 @@ public class Main extends Application {
     }
 
     public String iluStudentowWDacie(String data) {
-        data = data.split(" ")[0];
         String[] dane = data.split("-");
         return sqlHandler.iluStudentowPodeszloWBazie(dane[2] + "-" + dane[1] + "-" + dane[0] + " 00:00:00.0");
     }
 
-    public void zaktualizujOcene(String data, Zestaw zestaw) {
-        if (zestaw.getTermin().equals("pierwszy")) {
-            sqlHandler.wprowadzOcenyStudentom1(data, zestaw.getNazwa());
-        } else sqlHandler.wprowadzOcenyStudentom2(data, zestaw.getNazwa());
-        students.clear();
+    public String ilePunktowMaZestaw(String nazwa) {
+        return sqlHandler.ilePunktowMaZestaw(nazwa);
+    }
+
+    public void zaktualizujOcene(String data, String ilu) {
+        String data2 = data.split(" ")[0];
+        String[] dane = data2.split("-");
+        data2 = dane[2] + "-" + dane[1] + "-" + dane[0] + " 00:00:00.0";
+        String termin = sqlHandler.selectTerminEgzaminu(data);
+        if (termin == null) showError("Niepowodzenie","Nie wybrano egzaminu");
+        else if (termin.equals("pierwszy")) {
+            sqlHandler.wprowadzOcenyStudentom1(data2);
+            showInfo("Powodzenie","Wystawiono Ocene_1 "+ilu+" studentom");
+        } else {
+            sqlHandler.wprowadzOcenyStudentom2(data2);
+            showInfo("Powodzenie","Wystawiono Ocene_2 "+ilu+" studentom");
+        }
+        studenci.clear();
         sqlHandler.selectStudenci();
     }
 
     public void usunZaliczonychZBazy() {
-        int ilu = students.size();
+        int ilu = studenci.size();
         sqlHandler.usunTychCoZdali();
-        students.clear();
+        studenci.clear();
         sqlHandler.selectStudenci();
-        ilu = ilu - students.size();
+        ilu = ilu - studenci.size();
         if (ilu > 0)
             showInfo("Powodzenie","Usunięto "+ilu+" studentów.");
     }
 
     public void czyscOcenySpadochroniarzom() {
         int ilu = 0;
-        for(Student student : students) {
+        for(Student student : studenci) {
             if(student.getOcena_2()!=null)
                 if (student.getOcena_2().equals("2.0")) ilu++;
         }
         sqlHandler.czyscOceny();
-        students.clear();
+        studenci.clear();
         sqlHandler.selectStudenci();
         int ilu2 = 0;
-        for(Student student : students) {
+        for(Student student : studenci) {
             if(student.getOcena_2()!=null)
                 if (student.getOcena_2().equals("2.0")) ilu2++;
         }
@@ -468,5 +552,7 @@ public class Main extends Application {
         sqlHandler.selectPytania();
     }
 
-
+    public String selectTerminEgzaminu(String data) {
+        return sqlHandler.selectTerminEgzaminu(data);
+    }
 }

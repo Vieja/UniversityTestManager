@@ -9,22 +9,21 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import project.Main;
 import project.classes.Podejscie;
-import project.classes.Student;
+import project.classes.Grupa;
 import project.classes.Zestaw;
 
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 
 public class WynikiController extends TabController{
 
-
     Main main;
 
-    public TableView<Zestaw> TableZestaw;
+    public TableView<Grupa> TableGrupa;
     public TableView<Podejscie> TableStudent;
-    public ChoiceBox dateChoiceBox;
-    public TableColumn<Zestaw, String> ColumnZestawNazwa;
-    public TableColumn<Zestaw, String> ColumnZestawTermin;
+    public ChoiceBox<String> dateChoiceBox;
+    public TableColumn<Grupa, String> ColumnGrupaNazwa;
     public TableColumn<Podejscie, String> ColumnStudentIndeks;
     public TableColumn<Podejscie, String> ColumnStudentImie;
     public TableColumn<Podejscie, String> ColumnStudentNazwisko;
@@ -34,11 +33,15 @@ public class WynikiController extends TabController{
     public TextField imieField1;
     public TextField nazwiskoField1;
     public TextField indeksField1;
+    public TextField terminLabel;
+    public ChoiceBox<String> zestawChoiceBox;
+    public DatePicker datePicker;
+    public ChoiceBox<String> terminChoiceBox;
     public SplitPane split1;
     public SplitPane split2;
 
     public Podejscie wybrany = null;
-    public Zestaw wybranyZestaw = null;
+    public Grupa wybranaGrupa = null;
 
     @FXML
     private void initialize() {
@@ -54,7 +57,7 @@ public class WynikiController extends TabController{
         divider2.positionProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldvalue, Number newvalue) {
-                divider2.setPosition(0.9385);
+                divider2.setPosition(0.7);
             }
         });
 
@@ -64,22 +67,24 @@ public class WynikiController extends TabController{
                 String data;
                 if (!newvalue.equals(-1)) {
                     data = (String) dateChoiceBox.getItems().get((Integer) newvalue);
-                    data = data.split(" ")[0];
-                    TableZestaw.setItems(main.getObserListZestawyKtoreSaZDaty(data));
+                    TableGrupa.setItems(main.getObserListGrupyEgzaminu(data));
+                    terminLabel.setText(main.selectTerminEgzaminu(data));
                     iluStudentow.setText(main.iluStudentowWDacie(data));
                 } else {
-                    TableZestaw.setItems(null);
+                    TableGrupa.setItems(null);
                     TableStudent.setItems(null);
+                    terminLabel.setText("");
                     iluStudentow.setText(null);
                 }
             }
         });
 
-        TableZestaw.getSelectionModel().selectedItemProperty().addListener(
+        TableGrupa.getSelectionModel().selectedItemProperty().addListener(
                 ((observable, oldValue, newValue) -> {
                     if(newValue != null) {
-                        TableStudent.setItems(main.getObserListPodejsciaZZestawu(newValue));
-                        wybranyZestaw = newValue;
+                        TableStudent.setItems(main.getObserListPodejsciaZGrupy(newValue));
+                        wybranaGrupa = newValue;
+                        clearStudent();
                     }
                 })
         );
@@ -92,8 +97,7 @@ public class WynikiController extends TabController{
                 })
         );
 
-        ColumnZestawNazwa.setCellValueFactory(cellData -> cellData.getValue().getNazwaProperty());
-        ColumnZestawTermin.setCellValueFactory(cellData -> cellData.getValue().getTerminProperty());
+        ColumnGrupaNazwa.setCellValueFactory(cellData -> cellData.getValue().getNazwaProperty());
 
         ColumnStudentIndeks.setCellValueFactory(cellData -> cellData.getValue().getStudentIndeksProperty());
         ColumnStudentImie.setCellValueFactory(cellData -> cellData.getValue().getStudentImieProperty());
@@ -113,13 +117,17 @@ public class WynikiController extends TabController{
         wybrany = pod;
     }
 
+    private void clearStudent() {
+        indeksField1.setText("");
+        imieField1.setText("");
+        nazwiskoField1.setText("");
+        ocenaField.setText("");
+    }
+
     public void zaktualizujOceny() {
-        if (wybrany!=null) {
-            String data = (String) dateChoiceBox.getValue();
-            data = data.split(" ")[0];
-            String[] dane = data.split("-");
-            main.zaktualizujOcene(dane[2] + "-" + dane[1] + "-" + dane[0] + " 00:00:00.0", wybranyZestaw);
-        }
+        String data = (String) dateChoiceBox.getValue();
+        if (!data.equals(""))
+            main.zaktualizujOcene(data, iluStudentow.getText());
     }
 
     public void zapiszOcene() {
@@ -136,7 +144,49 @@ public class WynikiController extends TabController{
     @Override
     public void setApp(Main main) {
         this.main = main;
-        dateChoiceBox.setItems(main.getObserListDatyEgz());
+        dateChoiceBox.setItems(main.getObserListDatyEgzaminu());
         dateChoiceBox.getSelectionModel().selectFirst();
+        List<String> list = Arrays.asList("pierwszy", "drugi", "trzeci");
+        ObservableList<String> terminy = FXCollections.observableArrayList();
+        terminy.addAll(list);
+        terminChoiceBox.setItems(terminy);
+        zestawChoiceBox.setItems(main.getObserListNazwyZestawu());
+    }
+
+    public void stworzEgzamin() {
+        if (terminChoiceBox.getSelectionModel().isEmpty() || datePicker.getValue() == null)
+            main.showError("Błąd dodawania egzaminu", "Upewnij się, że wybrałeś datę i termin.");
+        else {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+            String formattedString = datePicker.getValue().format(formatter);
+            String termin = terminChoiceBox.getValue();
+            main.dodajEgzaminDoBazy(formattedString, termin);
+            dateChoiceBox.getSelectionModel().clearSelection();
+            dateChoiceBox.setItems(main.getObserListDatyEgzaminu());
+        }
+    }
+
+    public void stworzGrupe() {
+        if (zestawChoiceBox.getSelectionModel().isEmpty() || dateChoiceBox.getSelectionModel().isEmpty())
+            main.showError("Błąd tworzenia grupy", "Upewnij się, że wybrałeś nazwę zestawu oraz datę egzaminu dla grupy.");
+        else {
+            main.dodajGrupeDoBazy(dateChoiceBox.getValue(),zestawChoiceBox.getValue());
+            TableGrupa.setItems(main.getObserListGrupyEgzaminu(dateChoiceBox.getValue()));
+            TableGrupa.setVisible(false);
+            TableGrupa.setVisible(true);
+        }
+    }
+
+    public void usunGrupe() {
+        main.usunGrupeZBazy(wybranaGrupa);
+        TableGrupa.setItems(main.getObserListGrupyEgzaminu(dateChoiceBox.getValue()));
+        TableGrupa.setVisible(false);
+        TableGrupa.setVisible(true);
+    }
+
+    public void usunEgzamin() {
+        main.usunEgzaminZBazy(dateChoiceBox.getValue());
+        dateChoiceBox.getSelectionModel().clearSelection();
+        dateChoiceBox.setItems(main.getObserListDatyEgzaminu());
     }
 }

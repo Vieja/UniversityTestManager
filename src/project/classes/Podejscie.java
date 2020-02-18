@@ -6,12 +6,12 @@ import javafx.beans.value.ObservableValue;
 
 public class Podejscie {
     private Student student;
-    private int id_zes;
+    private int id_grupy;
     private String ocena;
 
     public Podejscie(Student student, int id_zes, String ocena) {
         this.student = student;
-        this.id_zes = id_zes;
+        this.id_grupy = id_zes;
         this.ocena = ocena;
     }
 
@@ -43,12 +43,12 @@ public class Podejscie {
         return student.getNazwisko();
     }
 
-    public int getId_zes() {
-        return id_zes;
+    public int getId_grupy() {
+        return id_grupy;
     }
 
-    public void setId_zes(int id_zes) {
-        this.id_zes = id_zes;
+    public void setId_grupy(int id_zes) {
+        this.id_grupy = id_zes;
     }
 
     public StringProperty getStudentImieProperty() {
